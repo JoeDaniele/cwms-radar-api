@@ -7,8 +7,8 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import cwms.radar.api.errors.RadarError;
 import cwms.radar.data.dao.PoolDao;
-import cwms.radar.data.dto.Clobs;
 import cwms.radar.data.dto.Pool;
 import cwms.radar.data.dto.Pools;
 import cwms.radar.formatters.ContentType;
@@ -20,6 +20,8 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.javalin.plugin.openapi.annotations.OpenApiSecurity;
+import org.eclipse.jetty.http.HttpStatus;
 import org.jooq.DSLContext;
 
 import static com.codahale.metrics.MetricRegistry.name;
@@ -133,13 +135,15 @@ public class PoolController implements CrudHandler
 					),
 					@OpenApiResponse(status = "404", description = "Based on the combination of inputs provided the Location Category was not found."),
 					@OpenApiResponse(status = "501", description = "request format is not implemented")},
-			description = "Retrieves requested Pool", tags = {"Pools"})
+			description = "Retrieves requested Pool", tags = {"Pools"},
+			security = {@OpenApiSecurity(name = "bearerAuth")
+	}
+	)
 	@Override
 	public void getOne(Context ctx, String poolId)
 	{
 		getOneRequest.mark();
-		try(final Timer.Context timeContext = getOneRequestTime.time();
-			DSLContext dsl = getDslContext(ctx))
+		try(final Timer.Context timeContext = getOneRequestTime.time(); DSLContext dsl = getDslContext(ctx))
 		{
 			PoolDao dao = new PoolDao(dsl);
 
@@ -157,18 +161,26 @@ public class PoolController implements CrudHandler
 
 			// I want to call retrievePool but it doesn't return implicit pools
 			//			pool = dao.retrievePool(projectId, poolId, office);
-			Pool pool = dao.retrievePoolFromCatalog(projectId, poolId, bottomMask, topMask, isExplicit, isImplicit, office);
+			Pool pool = dao.retrievePoolFromCatalog(projectId, poolId, bottomMask, topMask, isExplicit, isImplicit,
+					office);
+			if(pool != null)
+			{
+				String formatHeader = ctx.header(Header.ACCEPT);
+				ContentType contentType = Formats.parseHeaderAndQueryParm(formatHeader, "");
+				ctx.contentType(contentType.toString());
 
-			String formatHeader = ctx.header(Header.ACCEPT);
-			ContentType contentType = Formats.parseHeaderAndQueryParm(formatHeader, "");
-			ctx.contentType(contentType.toString());
+				String result = Formats.format(contentType, pool);
 
-			String result = Formats.format(contentType, pool);
+				ctx.result(result);
+				requestResultSize.update(result.length());
 
-			ctx.result(result);
-			requestResultSize.update(result.length());
-
-			ctx.status(HttpServletResponse.SC_OK);
+				ctx.status(HttpServletResponse.SC_OK);
+			}
+			else
+			{
+				ctx.status(HttpStatus.NOT_FOUND_404).json(
+						new RadarError("Unable to find pool based on given parameters"));
+			}
 		}
 
 	}

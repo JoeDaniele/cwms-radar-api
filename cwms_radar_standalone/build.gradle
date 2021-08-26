@@ -9,12 +9,15 @@ configurations {
 dependencies {
     implementation 'org.slf4j:slf4j-simple:1.8.0-beta4'
     implementation 'org.apache.tomcat:tomcat-jdbc:9.0.41'
-    implementation 'io.javalin:javalin:3.13.4'
+    implementation "io.javalin:javalin:$JAVALIN_VERSION"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
     implementation (project(':cwms_radar_api'))
     implementation 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
-    implementation("io.javalin:javalin:3.12.0")
-    implementation("io.javalin:javalin-openapi:3.12.0")
+
+    implementation ("io.javalin:javalin-openapi:$JAVALIN_VERSION"){
+        exclude group: 'org.webjars', module: 'swagger-ui'
+    }
+
     implementation 'io.swagger.core.v3:swagger-core:2.0.9'
     implementation 'io.swagger.core.v3:swagger-annotations:2.0.9'
     implementation 'org.webjars:swagger-ui:3.24.3'
@@ -41,6 +44,9 @@ dependencies {
         exclude group: "com.oracle.database.jdbc", module: "*"
         exclude group: "javax.xml.bind", module: "*"
     }
+
+    implementation 'com.github.kmehrunes:javalin-jwt:0.3'
+
 }
 
 application {

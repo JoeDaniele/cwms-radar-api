@@ -43,12 +43,12 @@ dependencies {
 
     testImplementation 'com.oracle.database.jdbc:ojdbc8:19.3.0.0'
 
-
+    implementation 'com.github.kmehrunes:javalin-jwt:0.3'
+    implementation 'com.auth0:jwks-rsa:0.9.0'
 }
 
 test {
 	useJUnitPlatform()
-
 }
 
 description = 'CWMS RADAR API'
