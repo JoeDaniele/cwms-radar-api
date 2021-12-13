@@ -2,7 +2,7 @@ package cwms.radar.data.dto.catalog;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement(name="alias")
+@XmlRootElement(name = "alias")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class LocationAlias {
     @XmlAttribute
@@ -11,7 +11,9 @@ public class LocationAlias {
     private String value;
 
     @SuppressWarnings("unused") // for JAXB
-    private LocationAlias(){}
+    private LocationAlias() {
+
+    }
 
     public LocationAlias(String name, String value) {
         this.name = name;
@@ -28,11 +30,11 @@ public class LocationAlias {
 
     @Override
     public String toString() {
-        return "{" +
-            " name='" + getName() + "'" +
-            ", value='" + getValue() + "'" +
-            "}";
+        return "{"
+            + " name='" + getName() + "'"
+            + ", value='" + getValue() + "'"
+            + "}";
     }
-    
-    
+
+
 }

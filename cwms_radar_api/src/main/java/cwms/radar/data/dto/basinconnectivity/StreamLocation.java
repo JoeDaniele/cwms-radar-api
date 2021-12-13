@@ -2,8 +2,7 @@ package cwms.radar.data.dto.basinconnectivity;
 
 import cwms.radar.data.dto.CwmsDTO;
 
-public class StreamLocation implements CwmsDTO
-{
+public class StreamLocation implements CwmsDTO {
     private final String locationName;
     private final String streamName;
     private final Double station;
@@ -15,8 +14,7 @@ public class StreamLocation implements CwmsDTO
     private final Double totalDrainageArea;
     private final Double ungagedDrainageArea;
 
-    private StreamLocation(Builder builder)
-    {
+    private StreamLocation(Builder builder) {
         locationName = builder.locationName;
         streamName = builder.streamName;
         station = builder.station;
@@ -29,58 +27,47 @@ public class StreamLocation implements CwmsDTO
         ungagedDrainageArea = builder.ungagedDrainageArea;
     }
 
-    public String getStreamName()
-    {
+    public String getStreamName() {
         return streamName;
     }
 
-    public Double getStation()
-    {
+    public Double getStation() {
         return station;
     }
 
-    public String getBank()
-    {
+    public String getBank() {
         return bank;
     }
 
-    public String getLocationName()
-    {
+    public String getLocationName() {
         return locationName;
     }
 
-    public Double getPublishedStation()
-    {
+    public Double getPublishedStation() {
         return publishedStation;
     }
 
-    public Double getNagivationStation()
-    {
+    public Double getNagivationStation() {
         return navigationStation;
     }
 
-    public Double getLowestMeasurableStage()
-    {
+    public Double getLowestMeasurableStage() {
         return lowestMeasurableStage;
     }
 
-    public Double getTotalDrainageArea()
-    {
+    public Double getTotalDrainageArea() {
         return totalDrainageArea;
     }
 
-    public Double getUngagedDrainageArea()
-    {
+    public Double getUngagedDrainageArea() {
         return ungagedDrainageArea;
     }
 
-    public String getOfficeId()
-    {
+    public String getOfficeId() {
         return officeId;
     }
 
-    public static class Builder
-    {
+    public static class Builder {
         private final String officeId;
         private final String locationName;
         private final String streamName;
@@ -92,8 +79,16 @@ public class StreamLocation implements CwmsDTO
         private Double totalDrainageArea;
         private Double ungagedDrainageArea;
 
-        public Builder(String locationName, String streamName, Double station, String bank, String officeId)
-        {
+        /**
+         * New Stream location.
+         * @param locationName CWMS Location with the database
+         * @param streamName name of the stream
+         * @param station station mile?
+         * @param bank left or right
+         * @param officeId owning Offices
+         */
+        public Builder(String locationName, String streamName,
+                       Double station, String bank, String officeId) {
             this.locationName = locationName;
             this.streamName = streamName;
             this.station = station;
@@ -101,8 +96,11 @@ public class StreamLocation implements CwmsDTO
             this.officeId = officeId;
         }
 
-        public Builder(StreamLocation streamLocation)
-        {
+        /**
+         * Builder for a stream location from an existing location.
+         * @param streamLocation the existing location
+         */
+        public Builder(StreamLocation streamLocation) {
             this.locationName = streamLocation.getLocationName();
             this.streamName = streamLocation.getStreamName();
             this.station = streamLocation.getStation();
@@ -115,41 +113,34 @@ public class StreamLocation implements CwmsDTO
             this.ungagedDrainageArea = streamLocation.getUngagedDrainageArea();
         }
 
-        public Builder withPublishedStation(Double publishedStation)
-        {
+        public Builder withPublishedStation(Double publishedStation) {
             this.publishedStation = publishedStation;
             return this;
         }
 
-        public Builder withNavigationStation(Double navigationStation)
-        {
+        public Builder withNavigationStation(Double navigationStation) {
             this.navigationStation = navigationStation;
             return this;
         }
 
-        public Builder withLowestMeasurableStage(Double lowestMeasurableStage)
-        {
+        public Builder withLowestMeasurableStage(Double lowestMeasurableStage) {
             this.lowestMeasurableStage = lowestMeasurableStage;
             return this;
         }
 
-        public Builder withTotalDrainageArea(Double totalDrainageArea)
-        {
+        public Builder withTotalDrainageArea(Double totalDrainageArea) {
             this.totalDrainageArea = totalDrainageArea;
             return this;
         }
 
-        public Builder withUngagedDrainageArea(Double ungagedDrainageArea)
-        {
+        public Builder withUngagedDrainageArea(Double ungagedDrainageArea) {
             this.ungagedDrainageArea = ungagedDrainageArea;
             return this;
         }
 
-        public StreamLocation build()
-        {
+        public StreamLocation build() {
             return new StreamLocation(this);
         }
     }
 
 }
-

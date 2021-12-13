@@ -19,8 +19,7 @@ import java.util.function.Consumer;
 @JsonDeserialize(builder = Location.Builder.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public final class  Location implements CwmsDTO
-{
+public final class  Location implements CwmsDTO {
     private final String name;
     private final Double latitude;
     private final Double longitude;
@@ -44,8 +43,7 @@ public final class  Location implements CwmsDTO
     private final String boundingOfficeId;
     private final String officeId;
 
-    private Location(Builder builder)
-    {
+    private Location(Builder builder) {
         this.name = builder.name;
         this.latitude = builder.latitude;
         this.longitude = builder.longitude;
@@ -70,125 +68,100 @@ public final class  Location implements CwmsDTO
         this.officeId = builder.officeId;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public Double getLatitude()
-    {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public Double getLongitude()
-    {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public Boolean getActive()
-    {
+    public Boolean getActive() {
         return active;
     }
 
-    public String getPublicName()
-    {
+    public String getPublicName() {
         return publicName;
     }
 
-    public String getLongName()
-    {
+    public String getLongName() {
         return longName;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public String getTimezoneName()
-    {
+    public String getTimezoneName() {
         return timezoneName;
     }
 
-    public String getLocationType()
-    {
+    public String getLocationType() {
         return locationType;
     }
 
-    public String getLocationKind()
-    {
+    public String getLocationKind() {
         return locationKind;
     }
 
-    public Nation getNation()
-    {
+    public Nation getNation() {
         return nation;
     }
 
-    public String getStateInitial()
-    {
+    public String getStateInitial() {
         return stateInitial;
     }
 
-    public String getCountyName()
-    {
+    public String getCountyName() {
         return countyName;
     }
 
-    public String getNearestCity()
-    {
+    public String getNearestCity() {
         return nearestCity;
     }
 
-    public String getHorizontalDatum()
-    {
+    public String getHorizontalDatum() {
         return horizontalDatum;
     }
 
-    public Double getPublishedLongitude()
-    {
+    public Double getPublishedLongitude() {
         return publishedLongitude;
     }
 
-    public Double getPublishedLatitude()
-    {
+    public Double getPublishedLatitude() {
         return publishedLatitude;
     }
 
-    public String getVerticalDatum()
-    {
+    public String getVerticalDatum() {
         return verticalDatum;
     }
 
-    public Double getElevation()
-    {
+    public Double getElevation() {
         return elevation;
     }
 
-    public String getMapLabel()
-    {
+    public String getMapLabel() {
         return mapLabel;
     }
 
-    public String getBoundingOfficeId()
-    {
+    public String getBoundingOfficeId() {
         return boundingOfficeId;
     }
 
-    public String getOfficeId()
-    {
+    public String getOfficeId() {
         return officeId;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Location location = (Location) o;
@@ -216,43 +189,61 @@ public final class  Location implements CwmsDTO
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash(getName(), getLatitude(), getLongitude(), getActive(), getPublicName(), getLongName(), getDescription(), getTimezoneName(), getLocationType(), getLocationKind(), getNation(), getStateInitial(), getCountyName(), getHorizontalDatum(), getPublishedLongitude(), getPublishedLatitude(), getVerticalDatum(), getElevation(), getMapLabel(), getBoundingOfficeId(), getOfficeId());
+    public int hashCode() {
+        return Objects.hash(getName(),
+                            getLatitude(),
+                            getLongitude(),
+                            getActive(),
+                            getPublicName(),
+                            getLongName(),
+                            getDescription(),
+                            getTimezoneName(),
+                            getLocationType(),
+                            getLocationKind(),
+                            getNation(),
+                            getStateInitial(),
+                            getCountyName(),
+                            getHorizontalDatum(),
+                            getPublishedLongitude(),
+                            getPublishedLatitude(),
+                            getVerticalDatum(),
+                            getElevation(),
+                            getMapLabel(),
+                            getBoundingOfficeId(),
+                            getOfficeId());
     }
 
     @Override
     public String toString() {
-        return "Location{" +
-                "name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", active=" + active +
-                ", publicName='" + publicName + '\'' +
-                ", longName='" + longName + '\'' +
-                ", description='" + description + '\'' +
-                ", timezoneName='" + timezoneName + '\'' +
-                ", locationType='" + locationType + '\'' +
-                ", locationKind='" + locationKind + '\'' +
-                ", nation=" + nation +
-                ", stateInitial='" + stateInitial + '\'' +
-                ", countyName='" + countyName + '\'' +
-                ", nearestCity='" + nearestCity + '\'' +
-                ", horizontalDatum='" + horizontalDatum + '\'' +
-                ", publishedLongitude=" + publishedLongitude +
-                ", publishedLatitude=" + publishedLatitude +
-                ", verticalDatum='" + verticalDatum + '\'' +
-                ", elevation=" + elevation +
-                ", mapLabel='" + mapLabel + '\'' +
-                ", boundingOfficeId='" + boundingOfficeId + '\'' +
-                ", officeId='" + officeId + '\'' +
-                '}';
+        return "Location{"
+                + "name='" + name + '\''
+                + ", latitude=" + latitude
+                + ", longitude=" + longitude
+                + ", active=" + active
+                + ", publicName='" + publicName + '\''
+                + ", longName='" + longName + '\''
+                + ", description='" + description + '\''
+                + ", timezoneName='" + timezoneName + '\''
+                + ", locationType='" + locationType + '\''
+                + ", locationKind='" + locationKind + '\''
+                + ", nation=" + nation
+                + ", stateInitial='" + stateInitial + '\''
+                + ", countyName='" + countyName + '\''
+                + ", nearestCity='" + nearestCity + '\''
+                + ", horizontalDatum='" + horizontalDatum + '\''
+                + ", publishedLongitude=" + publishedLongitude
+                + ", publishedLatitude=" + publishedLatitude
+                + ", verticalDatum='" + verticalDatum + '\''
+                + ", elevation=" + elevation
+                + ", mapLabel='" + mapLabel + '\''
+                + ", boundingOfficeId='" + boundingOfficeId + '\''
+                + ", officeId='" + officeId + '\''
+                + '}';
     }
 
     @JsonPOJOBuilder
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-    public static class Builder
-    {
+    public static class Builder {
         private String name;
         private double latitude;
         private double longitude;
@@ -278,12 +269,24 @@ public final class  Location implements CwmsDTO
         private static final String MISSING_NAME_ERROR_MSG = "Location name is a required field";
         private final Map<String, Consumer<Object>> propertyFunctionMap = new HashMap<>();
 
+        /**
+         * Create a new location.
+         * @param name location name
+         * @param locationKind indicate of purpose
+         * @param timezoneName timezone the location resides in
+         * @param latitude map reference
+         * @param longitude map reference
+         * @param horizontalDatum map reference
+         * @param officeId owning office.
+         */
         @JsonCreator
-        public Builder(@JsonProperty(value = "name") String name, @JsonProperty(value = "location-kind") String locationKind,
-                       @JsonProperty (value = "timezone-name") ZoneId timezoneName, @JsonProperty(value = "latitude") double latitude,
-                       @JsonProperty(value = "longitude") double longitude, @JsonProperty(value = "horizontal-datum") String horizontalDatum,
-                       @JsonProperty(value = "office-id") String officeId)
-        {
+        public Builder(@JsonProperty(value = "name") String name,
+                       @JsonProperty(value = "location-kind") String locationKind,
+                       @JsonProperty (value = "timezone-name") ZoneId timezoneName,
+                       @JsonProperty(value = "latitude") double latitude,
+                       @JsonProperty(value = "longitude") double longitude,
+                       @JsonProperty(value = "horizontal-datum") String horizontalDatum,
+                       @JsonProperty(value = "office-id") String officeId) {
             this.name = name;
             this.publicName = name;
             this.locationKind = locationKind;
@@ -295,8 +298,11 @@ public final class  Location implements CwmsDTO
             buildPropertyFunctions();
         }
 
-        public Builder(Location location)
-        {
+        /**
+         * Duplicate an existing location.
+         * @param location the existing location
+         */
+        public Builder(Location location) {
             this.name = location.getName();
             this.latitude = location.getLatitude();
             this.longitude = location.getLongitude();
@@ -322,9 +328,9 @@ public final class  Location implements CwmsDTO
             buildPropertyFunctions();
         }
 
+        @SuppressWarnings("checkstyle:linelength")
         @JsonIgnore
-        private void buildPropertyFunctions()
-        {
+        private void buildPropertyFunctions() {
             propertyFunctionMap.clear();
             propertyFunctionMap.put("name", nameVal -> withName((String)nameVal));
             propertyFunctionMap.put("latitude", latitudeVal -> withLatitude((Double)latitudeVal));
@@ -350,169 +356,157 @@ public final class  Location implements CwmsDTO
             propertyFunctionMap.put("bounding-office-id", boundingOfficeIdVal -> withBoundingOfficeId((String)boundingOfficeIdVal));
         }
 
+        /**
+         * Helper to make the logic in the data storage routine easier.
+         * @param propertyName member variable we wish to alter
+         * @param value value to set.
+         */
         @JsonIgnore
-        public Builder withProperty(String propertyName, Object value)
-        {
+        public Builder withProperty(String propertyName, Object value) {
             Consumer<Object> function = propertyFunctionMap.get(propertyName);
-            if(function == null)
-            {
+            if (function == null) {
                 throw new IllegalArgumentException("Property Name does not exist for Location");
             }
             function.accept(value);
             return this;
         }
 
-        public Builder withName(String name)
-        {
+        public Builder withName(String name) {
             this.name = Objects.requireNonNull(name, MISSING_NAME_ERROR_MSG);
             return this;
         }
 
-        public Builder withLocationKind(String kind)
-        {
+        public Builder withLocationKind(String kind) {
             this.locationKind = Objects.requireNonNull(kind, "Location kind is a required field");
             return this;
         }
 
-        public Builder withTimeZoneName(ZoneId zoneId)
-        {
+        public Builder withTimeZoneName(ZoneId zoneId) {
             this.timezoneName = zoneId.getId();
             return this;
         }
 
-        public Builder withLatitude(Double latitude)
-        {
+        public Builder withLatitude(Double latitude) {
             this.latitude = Objects.requireNonNull(latitude, "Latitude is a required field");
             return this;
         }
 
-        public Builder withLongitude(Double longitude)
-        {
+        public Builder withLongitude(Double longitude) {
             this.longitude = Objects.requireNonNull(longitude, "Longitude is a required field");
             return this;
         }
 
-        public Builder withHorizontalDatum(String horizontalDatum)
-        {
-            this.horizontalDatum = Objects.requireNonNull(horizontalDatum, "Horizontal datum is a required field");
+        /**
+         * makes sure the datum isn't unset.
+         * @param horizontalDatum non-string string setting the horizontal reference
+         * @return the builder
+         */
+        public Builder withHorizontalDatum(String horizontalDatum) {
+            this.horizontalDatum = Objects.requireNonNull(
+                                        horizontalDatum, "Horizontal datum is a required field");
             return this;
         }
 
-        public Builder withOfficeId(String officeId)
-        {
+        public Builder withOfficeId(String officeId) {
             this.officeId = Objects.requireNonNull(officeId, "Office Id is a required field");
             return this;
         }
 
-        public Builder withLongName(String longName)
-        {
+        public Builder withLongName(String longName) {
             this.longName = longName;
             return this;
         }
 
-        public Builder withActive(boolean active)
-        {
+        public Builder withActive(boolean active) {
             this.active = active;
             return this;
         }
 
-        public Builder withPublicName(String publicName)
-        {
+        public Builder withPublicName(String publicName) {
             this.publicName = publicName;
             return this;
         }
 
-        public Builder withDescription(String description)
-        {
+        public Builder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder withLocationType(String locationType)
-        {
+        public Builder withLocationType(String locationType) {
             this.locationType = locationType;
             return this;
         }
 
-        public Builder withNation(Nation nation)
-        {
+        public Builder withNation(Nation nation) {
             this.nation = nation;
             return this;
         }
 
-        public Builder withStateInitial(String stateInitial)
-        {
-            if(stateInitial != null)
-            {
+        /**
+         * Sets the state initial, enforcing capialization.
+         * @param stateInitial state or provice initial
+         * @return the builder
+         */
+        public Builder withStateInitial(String stateInitial) {
+            if (stateInitial != null) {
                 stateInitial = stateInitial.toUpperCase();
             }
             this.stateInitial = stateInitial;
             return this;
         }
 
-        public Builder withCountyName(String countyName)
-        {
+        public Builder withCountyName(String countyName) {
             this.countyName = countyName;
             return this;
         }
 
-        public Builder withNearestCity(String nearestCity)
-        {
+        public Builder withNearestCity(String nearestCity) {
             this.nearestCity = nearestCity;
             return this;
         }
 
-        public Builder withPublishedLatitude(Double publishedLatitude)
-        {
+        public Builder withPublishedLatitude(Double publishedLatitude) {
             this.publishedLatitude = publishedLatitude;
             return this;
         }
 
-        public Builder withPublishedLongitude(Double publishedLongitude)
-        {
+        public Builder withPublishedLongitude(Double publishedLongitude) {
             this.publishedLongitude = publishedLongitude;
             return this;
         }
 
-        public Builder withVerticalDatum(String verticalDatum)
-        {
+        public Builder withVerticalDatum(String verticalDatum) {
             this.verticalDatum = verticalDatum;
             return this;
         }
 
-        public Builder withElevation(Double elevation)
-        {
+        public Builder withElevation(Double elevation) {
             this.elevation = elevation;
             return this;
         }
 
-        public Builder withMapLabel(String mapLabel)
-        {
+        public Builder withMapLabel(String mapLabel) {
             this.mapLabel = mapLabel;
             return this;
         }
 
-        public Builder withBoundingOfficeId(String boundingOfficeId)
-        {
+        public Builder withBoundingOfficeId(String boundingOfficeId) {
             this.boundingOfficeId = boundingOfficeId;
             return this;
         }
 
-        public Location build()
-        {
+        public Location build() {
             return new Location(this);
         }
 
         @JsonIgnore
-        private Nation convertStringToNation(String nation)
-        {
+        private Nation convertStringToNation(String nation) {
             Nation nationConverted = Nation.NationForCode(nation);
-            if(nationConverted == null)
-            {
+            if (nationConverted == null) {
                 nationConverted = Nation.NationForName(nation);
             }
             return nationConverted;
         }
 
     }
- }
+}

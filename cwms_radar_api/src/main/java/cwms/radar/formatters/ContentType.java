@@ -9,39 +9,54 @@ public class ContentType implements Comparable<ContentType> {
     private String contentType;
     private Map<String,String> parameters;
 
-    public ContentType(String contentTypeHeader){
+    /**
+     * Process a content-type header into constituent parts.
+     * @param contentTypeHeader a content-type that might include versions and other parameters.
+     */
+    public ContentType(String contentTypeHeader) {
         parameters = new HashMap<>();
-        String parts[] = contentTypeHeader.split(";");
+        String []parts = contentTypeHeader.split(";");
         contentType = parts[0];
-        if( parts.length > 1){
-            for( int i = 1; i < parts.length; i++){
-                String key_val[] = parts[i].split("=");
-                parameters.put(key_val[0],key_val[1]);
+        if (parts.length > 1) {
+            for (int i = 1; i < parts.length; i++) {
+                String []keyVal = parts[i].split("=");
+                parameters.put(keyVal[0],keyVal[1]);
             }
         }
 
     }
 
-    public String getType(){ return contentType; }
+    public String getType() {
+        return contentType;
+    }
+
     public Map<String,String> getParameters() {
         return new HashMap<>(parameters);
     }
 
     @Override
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         logger.finest("Checking + " + this.toString() + " vs " + other.toString());
-        if(!(other instanceof ContentType) ) return false;
+        if (!(other instanceof ContentType)) {
+            return false;
+        }
         ContentType o = (ContentType)other;
-        if(!(contentType.equals(o.contentType))) return false;
-        for( String key: parameters.keySet() ){
-            if( key.equals("q")) continue; // we don't care about q for equals
-            if( !parameters.get(key).equals(o.parameters.get(key))) return false;
+        if (!(contentType.equals(o.contentType))) {
+            return false;
+        }
+        for (String key: parameters.keySet()) {
+            if (key.equals("q")) {
+                continue; // we don't care about q for equals
+            }
+            if (!parameters.get(key).equals(o.parameters.get(key))) {
+                return false;
+            }
         }
         return true;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.toString().hashCode();
     }
 
@@ -49,16 +64,22 @@ public class ContentType implements Comparable<ContentType> {
     public int compareTo(ContentType o) {
         float myPriority = Float.parseFloat(parameters.getOrDefault("q", "1"));
         float otherPriority = Float.parseFloat(parameters.getOrDefault("q", "1"));
-        if( myPriority == otherPriority) return 0;
-        else if( myPriority > otherPriority ) return 1;
-        else return -1;
+        if (myPriority == otherPriority) {
+            return 0;
+        } else if (myPriority > otherPriority) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder(contentType);
-        for( String key: parameters.keySet()){
-            if( key.equals("q")) continue;
+        for (String key: parameters.keySet()) {
+            if (key.equals("q")) {
+                continue;
+            }
             builder.append(";").append(key).append("=").append(parameters.get(key));
         }
         return builder.toString();

@@ -44,7 +44,10 @@ import org.jooq.exception.DataTypeException;
 import org.jooq.exception.IOException;
 import org.jooq.exception.MappingException;
 
-public class StringRecord implements Record1<String>{
+
+// TODO: remove?
+@SuppressWarnings({"checkstyle:linelength","checkstyle:methodtypeparametername"})
+public class StringRecord implements Record1<String> {
 
     @Override
     public boolean changed() {
@@ -79,31 +82,31 @@ public class StringRecord implements Record1<String>{
     @Override
     public void changed(boolean arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void changed(Field<?> arg0, boolean arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void changed(int arg0, boolean arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void changed(String arg0, boolean arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void changed(Name arg0, boolean arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -181,25 +184,25 @@ public class StringRecord implements Record1<String>{
     @Override
     public void format(OutputStream arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void format(Writer arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void format(OutputStream arg0, TXTFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void format(Writer arg0, TXTFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -217,25 +220,25 @@ public class StringRecord implements Record1<String>{
     @Override
     public void formatJSON(OutputStream arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatJSON(Writer arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatJSON(OutputStream arg0, JSONFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatJSON(Writer arg0, JSONFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -253,115 +256,115 @@ public class StringRecord implements Record1<String>{
     @Override
     public void formatXML(OutputStream arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatXML(Writer arg0) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatXML(OutputStream arg0, XMLFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void formatXML(Writer arg0, XMLFormat arg1) throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void from(Object arg0) throws MappingException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void from(Object arg0, Field<?>... arg1) throws MappingException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void from(Object arg0, String... arg1) throws MappingException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void from(Object arg0, Name... arg1) throws MappingException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void from(Object arg0, int... arg1) throws MappingException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromArray(Object... arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromArray(Object[] arg0, Field<?>... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromArray(Object[] arg0, String... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromArray(Object[] arg0, Name... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromArray(Object[] arg0, int... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromMap(Map<String, ?> arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromMap(Map<String, ?> arg0, Field<?>... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromMap(Map<String, ?> arg0, String... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromMap(Map<String, ?> arg0, Name... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void fromMap(Map<String, ?> arg0, int... arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -845,55 +848,55 @@ public class StringRecord implements Record1<String>{
     @Override
     public void reset() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void reset(Field<?> arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void reset(int arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void reset(String arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void reset(Name arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public <T> void set(Field<T> arg0, T arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public <T, U> void set(Field<T> arg0, U arg1, Converter<? extends T, ? super U> arg2) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public <T> void setValue(Field<T> arg0, T arg1) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public <T, U> void setValue(Field<T> arg0, U arg1, Converter<? extends T, ? super U> arg2) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -917,7 +920,7 @@ public class StringRecord implements Record1<String>{
     @Override
     public void attach(Configuration arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -929,7 +932,7 @@ public class StringRecord implements Record1<String>{
     @Override
     public void detach() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -973,5 +976,5 @@ public class StringRecord implements Record1<String>{
         // TODO Auto-generated method stub
         return null;
     }
-    
+
 }

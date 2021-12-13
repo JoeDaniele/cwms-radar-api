@@ -1,25 +1,26 @@
 package cwms.radar.formatters.csv;
 
-import java.util.List;
-
 import cwms.radar.data.dto.CwmsDTO;
 import cwms.radar.data.dto.Office;
 import cwms.radar.formatters.Formats;
 import cwms.radar.formatters.OutputFormatter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+
 
 @Schema(
     name = "Office_CSV",
     description = "Single Office or List of Offices in comma separated format",
     example =
-    "#Office Name,Long Name,Office Type,Reports To Office\r\n"+
-    "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"+
-    "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n" +
-    "NAB,Baltimore District,District,NAD\r\n"+
-    "NAD,North Atlantic Division,Division Headquarters,HQ"
+    "#Office Name,Long Name,Office Type,Reports To Office\r\n"
+    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"
+    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n"
+    + "NAB,Baltimore District,District,NAD\r\n"
+    + "NAD,North Atlantic Division,Division Headquarters,HQ"
 )
-public class CsvV1Office implements OutputFormatter{
+public class CsvV1Office implements OutputFormatter {
 
+    @SuppressWarnings("checkstyle:MemberName")
     public String Office;
     public String longName;
     public String officeType;
@@ -43,21 +44,21 @@ public class CsvV1Office implements OutputFormatter{
 
     @Override
     @SuppressWarnings("unchecked") // for the daoList conversion
-    public String format(List<? extends CwmsDTO> dtoList) {        
+    public String format(List<? extends CwmsDTO> dtoList) {
         List<Office> offices = (List<Office>)dtoList;
         StringBuilder builder = new StringBuilder();
         builder.append(getOfficeTabHeader()).append("\r\n");
-        for( Office office: offices){
+        for (Office office: offices) {
             builder.append(officeRow(office)).append("\r\n");
         }
         return builder.toString();
     }
 
-    private String getOfficeTabHeader(){
+    private String getOfficeTabHeader() {
         return "#Office Name,Long Name,Office Type,Reports To Office";
     }
 
-    private String officeRow(Office office){
+    private String officeRow(Office office) {
         StringBuilder builder = new StringBuilder();
         builder.append(office.getName()).append(",")
                .append(office.getLongName()).append(",")

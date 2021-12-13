@@ -6,230 +6,224 @@ import java.util.regex.Pattern;
 import usace.cwms.db.dao.ifc.pool.PoolNameType;
 import usace.cwms.db.dao.ifc.pool.PoolType;
 
-public class Pool extends PoolType implements CwmsDTO
-{
-	private final Number attribute;
-	private final String description;
-	private final String clobText;
+public class Pool extends PoolType implements CwmsDTO {
+    private final Number attribute;
+    private final String description;
+    private final String clobText;
 
-	private Pool(Builder b){
-		super(b.getPoolName(), b.getProjectId(), b.getBottomLevelId(), b.getTopLevelId(), b.isImplicit());
-		this.attribute = b.getAttribute();
-		this.description = b.getDescription();
-		this.clobText = b.getClobText();
-	}
+    private Pool(Builder b) {
+        super(b.getPoolName(),
+              b.getProjectId(),
+              b.getBottomLevelId(),
+              b.getTopLevelId(),
+              b.isImplicit());
+        this.attribute = b.getAttribute();
+        this.description = b.getDescription();
+        this.clobText = b.getClobText();
+    }
 
-	public Number getAttribute()
-	{
-		return attribute;
-	}
-
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public String getClobText()
-	{
-		return clobText;
-	}
-
-	@Override
-	public boolean equals(Object o)
-	{
-		if(this == o)
-		{
-			return true;
-		}
-		if(o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
-		if(!super.equals(o))
-		{
-			return false;
-		}
-
-		final Pool pool = (Pool) o;
-
-		if(getAttribute() != null ? !getAttribute().equals(pool.getAttribute()) : pool.getAttribute() != null)
-		{
-			return false;
-		}
-		if(getDescription() != null ? !getDescription().equals(pool.getDescription()) : pool.getDescription() != null)
-		{
-			return false;
-		}
-
-		return getClobText() != null ? getClobText().equals(pool.getClobText()) : pool.getClobText() == null;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		int result = super.hashCode();
-		result = 31 * result + (getAttribute() != null ? getAttribute().hashCode() : 0);
-		result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-
-		result = 31 * result + (getClobText() != null ? getClobText().hashCode() : 0);
-		return result;
-	}
-
-	public static Pool fromString(String input){
-		Pool retval= null;
-		Pattern pattern = Pattern.compile("^(.*)/(.*):(.*)$");
-		Matcher matcher = pattern.matcher(input);
-
-		if(matcher.matches()){
-			PoolNameType poolName = new PoolNameType(matcher.group(3), matcher.group(1) );
-			Builder builder = Builder.newInstance();
-			builder.withPoolName(poolName);
-			builder.withProjectId(matcher.group(2));
-			builder.withBottomLevelId(null);
-			builder.withTopLevelId(null);
-			builder.withImplicit(true);
-			retval = builder.build();
-		}
-
-		return retval;
-	}
-
-	// This is used in the Pools cursor.
-	@Override
-	public String toString(){
-		StringBuilder builder = new StringBuilder();
-		PoolNameType poolName = getPoolName();
-
-		builder.append(poolName.getOfficeId())
-				.append("/").append(getProjectId())
-				.append(":").append(poolName.getPoolName());
-		return builder.toString();
-	}
-
-	public static class Builder
-	{
-		private PoolNameType poolName;
-
-		private String projectId;
-		private String bottomLevelId;
-		private String topLevelId;
-		private boolean isImplicit;
-		private Number attribute;
-		private String description;
-		private String clobText;
+    public Number getAttribute() {
+        return attribute;
+    }
 
 
-		public PoolNameType getPoolName()
-		{
-			return poolName;
-		}
+    public String getDescription() {
+        return description;
+    }
 
-		public Builder withPoolName(PoolNameType poolName)
-		{
-			this.poolName = poolName;
-			return this;
-		}
+    public String getClobText() {
+        return clobText;
+    }
 
-		public String getProjectId()
-		{
-			return projectId;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
-		public Builder withProjectId(String projectId)
-		{
-			this.projectId = projectId;
-			return this;
-		}
+        final Pool pool = (Pool) o;
 
-		public String getBottomLevelId()
-		{
-			return bottomLevelId;
-		}
+        if (getAttribute() != null
+            ? !getAttribute().equals(pool.getAttribute())
+            : pool.getAttribute() != null) {
+            return false;
+        }
+        if (getDescription() != null
+            ? !getDescription().equals(pool.getDescription())
+            : pool.getDescription() != null) {
+            return false;
+        }
 
-		public Builder withBottomLevelId(String bottomLevelId)
-		{
-			this.bottomLevelId = bottomLevelId;
-			return this;
+        return getClobText() != null
+               ? getClobText().equals(pool.getClobText())
+               : pool.getClobText() == null;
+    }
 
-		}
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getAttribute() != null ? getAttribute().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
 
-		public String getTopLevelId()
-		{
-			return topLevelId;
-		}
+        result = 31 * result + (getClobText() != null ? getClobText().hashCode() : 0);
+        return result;
+    }
 
-		public Builder withTopLevelId(String topLevelId)
-		{
-			this.topLevelId = topLevelId;
-			return this;
-		}
+    /**
+     * Build a pool object from a provided string representation.
+     * @param input string representation of a pool
+     * @return a valid Pool object
+     */
+    public static Pool fromString(String input) {
+        Pool retval = null;
+        Pattern pattern = Pattern.compile("^(.*)/(.*):(.*)$");
+        Matcher matcher = pattern.matcher(input);
 
-		public boolean isImplicit()
-		{
-			return isImplicit;
-		}
+        if (matcher.matches()) {
+            PoolNameType poolName = new PoolNameType(matcher.group(3), matcher.group(1));
+            Builder builder = Builder.newInstance();
+            builder.withPoolName(poolName);
+            builder.withProjectId(matcher.group(2));
+            builder.withBottomLevelId(null);
+            builder.withTopLevelId(null);
+            builder.withImplicit(true);
+            retval = builder.build();
+        }
 
-		public Builder withImplicit(boolean implicit)
-		{
-			isImplicit = implicit;
-			return this;
-		}
+        return retval;
+    }
 
-		public Number getAttribute()
-		{
-			return attribute;
-		}
+    // This is used in the Pools cursor.
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        PoolNameType poolName = getPoolName();
 
-		public Builder withAttribute(Number attribute)
-		{
-			this.attribute = attribute;
-			return this;
-		}
+        builder.append(poolName.getOfficeId())
+                .append("/").append(getProjectId())
+                .append(":").append(poolName.getPoolName());
+        return builder.toString();
+    }
 
-		public String getDescription()
-		{
-			return description;
-		}
+    public static class Builder {
+        private PoolNameType poolName;
 
-		public Builder withDescription(String description)
-		{
-			this.description = description;
-			return this;
-		}
+        private String projectId;
+        private String bottomLevelId;
+        private String topLevelId;
+        private boolean isImplicit;
+        private Number attribute;
+        private String description;
+        private String clobText;
 
-		public String getClobText()
-		{
-			return clobText;
-		}
 
-		public Builder withClobText(String clobText)
-		{
-			this.clobText = clobText;
-			return this;
-		}
+        public PoolNameType getPoolName() {
+            return poolName;
+        }
 
-		public static Builder newInstance()
-		{
-			return new Builder();
-		}
+        public Builder withPoolName(PoolNameType poolName) {
+            this.poolName = poolName;
+            return this;
+        }
 
-		public Pool build()
-		{
-			return new Pool(this);
-		}
+        public String getProjectId() {
+            return projectId;
+        }
 
-		public Builder withPoolType(PoolType poolType)
-		{
-			withPoolName(poolType.getPoolName());
-			withBottomLevelId(poolType.getBottomLevelId());
-			withTopLevelId(poolType.getTopLevelId());
-			withProjectId(poolType.getProjectId());
-			withImplicit(poolType.isImplicit());
+        public Builder withProjectId(String projectId) {
+            this.projectId = projectId;
+            return this;
+        }
 
-			return this;
-		}
-	}
+        public String getBottomLevelId() {
+            return bottomLevelId;
+        }
+
+        /**
+         * Location level respresenting the lower boundrary of this named pool.
+         * @param bottomLevelId location level.
+         * @return the builder
+         */
+        public Builder withBottomLevelId(String bottomLevelId) {
+            this.bottomLevelId = bottomLevelId;
+            return this;
+
+        }
+
+        public String getTopLevelId() {
+            return topLevelId;
+        }
+
+        public Builder withTopLevelId(String topLevelId) {
+            this.topLevelId = topLevelId;
+            return this;
+        }
+
+        public boolean isImplicit() {
+            return isImplicit;
+        }
+
+        public Builder withImplicit(boolean implicit) {
+            isImplicit = implicit;
+            return this;
+        }
+
+        public Number getAttribute() {
+            return attribute;
+        }
+
+        public Builder withAttribute(Number attribute) {
+            this.attribute = attribute;
+            return this;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public Builder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public String getClobText() {
+            return clobText;
+        }
+
+        public Builder withClobText(String clobText) {
+            this.clobText = clobText;
+            return this;
+        }
+
+        public static Builder newInstance() {
+            return new Builder();
+        }
+
+        public Pool build() {
+            return new Pool(this);
+        }
+
+        /**
+         * copy poolType information from an existing pool.
+         * @param poolType and existing pool
+         * @return the builder object
+         */
+        public Builder withPoolType(PoolType poolType) {
+            withPoolName(poolType.getPoolName());
+            withBottomLevelId(poolType.getBottomLevelId());
+            withTopLevelId(poolType.getTopLevelId());
+            withProjectId(poolType.getProjectId());
+            withImplicit(poolType.isImplicit());
+
+            return this;
+        }
+    }
 
 
 }

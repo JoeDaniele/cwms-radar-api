@@ -1,78 +1,79 @@
 package cwms.radar.data.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 @Schema(description = "A representation of a TimeSeries category")
-@XmlRootElement(name="timeseries-category")
+@XmlRootElement(name = "timeseries-category")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TimeSeriesCategory implements CwmsDTO
-{
-	private final String officeId;
-	private final String id;
-	private final String description;
+public class TimeSeriesCategory implements CwmsDTO {
+    private final String officeId;
+    private final String id;
+    private final String description;
 
-	public TimeSeriesCategory(String catOfficeId, String catId, String catDesc)
-	{
-		this.officeId = catOfficeId;
-		this.id = catId;
-		this.description = catDesc;
-	}
+    /**
+     * Create a new timeseries category object.
+     * @param catOfficeId owning office
+     * @param catId name of category
+     * @param catDesc description of category
+     */
+    public TimeSeriesCategory(String catOfficeId, String catId, String catDesc) {
+        this.officeId = catOfficeId;
+        this.id = catId;
+        this.description = catDesc;
+    }
 
-	public TimeSeriesCategory(TimeSeriesCategory other){
-		this(other.getOfficeId(), other.getId(), other.getDescription());
-	}
+    /**
+     * Copy a timeseries category object.
+     * @param other object to copy
+     */
+    public TimeSeriesCategory(TimeSeriesCategory other) {
+        this(other.getOfficeId(), other.getId(), other.getDescription());
+    }
 
-	public String getOfficeId()
-	{
-		return officeId;
-	}
+    public String getOfficeId() {
+        return officeId;
+    }
 
-	public String getId()
-	{
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getDescription()
-	{
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public boolean equals(Object o)
-	{
-		if(this == o)
-		{
-			return true;
-		}
-		if(o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		final TimeSeriesCategory that = (TimeSeriesCategory) o;
+        final TimeSeriesCategory that = (TimeSeriesCategory) o;
 
-		if(getOfficeId() != null ? !getOfficeId().equals(that.getOfficeId()) : that.getOfficeId() != null)
-		{
-			return false;
-		}
-		if(getId() != null ? !getId().equals(that.getId()) : that.getId() != null)
-		{
-			return false;
-		}
-		return getDescription() != null ? getDescription().equals(
-				that.getDescription()) : that.getDescription() == null;
-	}
+        if (getOfficeId() != null
+               ? !getOfficeId().equals(that.getOfficeId())
+               : that.getOfficeId() != null) {
+            return false;
+        }
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
+            return false;
+        }
+        return getDescription() != null ? getDescription().equals(
+                that.getDescription()) : that.getDescription() == null;
+    }
 
-	@Override
-	public int hashCode()
-	{
-		int result = getOfficeId() != null ? getOfficeId().hashCode() : 0;
-		result = 31 * result + (getId() != null ? getId().hashCode() : 0);
-		result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = getOfficeId() != null ? getOfficeId().hashCode() : 0;
+        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        return result;
+    }
 }
