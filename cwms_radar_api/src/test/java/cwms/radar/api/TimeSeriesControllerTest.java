@@ -1,5 +1,16 @@
 package cwms.radar.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,20 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 public class TimeSeriesControllerTest extends ControllerTest {
-
-
 
     @Test
     public void testDaoMock() throws JsonProcessingException     {
@@ -67,7 +65,7 @@ public class TimeSeriesControllerTest extends ControllerTest {
 
 
         // build mock request and response
-        final HttpServletRequest request= mock(HttpServletRequest.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final Map<String, ?> map = new LinkedHashMap<>();
 
@@ -83,13 +81,14 @@ public class TimeSeriesControllerTest extends ControllerTest {
         String paramStr = buildParamStr(urlParams);
 
         when(request.getQueryString()).thenReturn(paramStr);
-        when(request.getRequestURL()).thenReturn(new StringBuffer( "http://127.0.0.1:7001/timeseries"));
+        when(request.getRequestURL())
+            .thenReturn(new StringBuffer("http://127.0.0.1:7001/timeseries"));
 
         // build real context that uses the mock request/response
         Context ctx = new Context(request, response, map);
 
         // Build a controller that doesn't actually talk to database
-        TimeSeriesController controller = new TimeSeriesController(new MetricRegistry()){
+        TimeSeriesController controller = new TimeSeriesController(new MetricRegistry()) {
             @Override
             protected DSLContext getDslContext(Context ctx) {
                 return null;
@@ -107,8 +106,8 @@ public class TimeSeriesControllerTest extends ControllerTest {
         controller.getAll(ctx);
 
         // Check that the controller accessed our mock dao in the expected way
-        verify(dao, times(1)).
-                getTimeseries(eq(""), eq(500), eq(tsId), eq(officeId), eq("EN"),
+        verify(dao, times(1))
+                .getTimeseries(eq(""), eq(500), eq(tsId), eq(officeId), eq("EN"),
                         isNull(), isNull(), isNull(), isNull());
 
         // Make sure controller thought it was happy
@@ -150,9 +149,10 @@ public class TimeSeriesControllerTest extends ControllerTest {
         assertSimilar(fakeTs, ts2);
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
     public void testDeserializeTimeSeriesXmlUTC() throws IOException {
-        TimeZone aDefault = TimeZone.getDefault();
+        final TimeZone defaultTZ = TimeZone.getDefault();
         try {
             TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
@@ -165,21 +165,21 @@ public class TimeSeriesControllerTest extends ControllerTest {
             TimeSeries fakeTs = buildTimeSeries("LRL", "RYAN3.Stage.Inst.5Minutes.0.ZSTORE_TS_TEST");
             assertSimilar(fakeTs, ts);
         } finally {
-            TimeZone.setDefault(aDefault);
+            TimeZone.setDefault(defaultTZ);
         }
     }
 
     @Test
     public void testDeserializeTimeSeriesXml() throws IOException {
-            String xml = loadResourceAsString("cwms/radar/api/timeseries_create.xml");
-            assertNotNull(xml);
-			 // Should this be XMLv2?
-            TimeSeries ts = TimeSeriesController.deserializeTimeSeries(xml, Formats.XMLV2);
+        String xml = loadResourceAsString("cwms/radar/api/timeseries_create.xml");
+        assertNotNull(xml);
+        // Should this be XMLv2?
+        TimeSeries ts = TimeSeriesController.deserializeTimeSeries(xml, Formats.XMLV2);
 
-            assertNotNull(ts);
+        assertNotNull(ts);
 
-            TimeSeries fakeTs = buildTimeSeries("LRL", "RYAN3.Stage.Inst.5Minutes.0.ZSTORE_TS_TEST");
-            assertSimilar(fakeTs, ts);
+        TimeSeries fakeTs = buildTimeSeries("LRL", "RYAN3.Stage.Inst.5Minutes.0.ZSTORE_TS_TEST");
+        assertSimilar(fakeTs, ts);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class TimeSeriesControllerTest extends ControllerTest {
         assertEquals(3600, diff); // just to make sure I've got the date parsing thing right.
 
         int minutes = 15;
-        int count = 60/15 ; // do I need a +1?  ie should this be 12 or 13?
+        int count = 60 / 15; // do I need a +1?  ie should this be 12 or 13?
         // Also, should end be the last point or the next interval?
 
         TimeSeries ts = new TimeSeries(null,
@@ -218,7 +218,7 @@ public class TimeSeriesControllerTest extends ControllerTest {
                                        Duration.ofMinutes(minutes));
 
         ZonedDateTime next = start;
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             Timestamp dateTime = Timestamp.from(next.toInstant());
             ts.addValue(dateTime, (double) i, 0);
             next = next.plus(minutes, ChronoUnit.MINUTES);
@@ -230,10 +230,13 @@ public class TimeSeriesControllerTest extends ControllerTest {
     private String buildParamStr(Map<String, String> urlParams) {
         StringBuilder sb = new StringBuilder();
         urlParams.entrySet()
-                 .forEach(e->sb.append(e.getKey()).append("=").append(e.getValue()).append("&"));
+                 .forEach(e -> sb.append(e.getKey())
+                                 .append("=")
+                                 .append(e.getValue())
+                                 .append("&"));
 
-        if(sb.length() > 0) {
-            sb.setLength(sb.length()-1);
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
         }
 
         return sb.toString();
@@ -259,15 +262,15 @@ public class TimeSeriesControllerTest extends ControllerTest {
                                                  attributes);
 
         final String tsId = "doesn't matter in this context";
-        assertThrows( CwmsAuthException.class , () -> {
+        assertThrows(CwmsAuthException.class, () -> {
             instance.create(context);
         });
 
-        assertThrows( CwmsAuthException.class, () -> {
+        assertThrows(CwmsAuthException.class, () -> {
             instance.update(context, tsId);
         });
 
-        assertThrows( CwmsAuthException.class, () -> {
+        assertThrows(CwmsAuthException.class, () -> {
             instance.delete(context, tsId);
         });
 

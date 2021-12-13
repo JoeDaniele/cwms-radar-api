@@ -1,5 +1,34 @@
 package cwms.radar.api;
 
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.codahale.metrics.MetricRegistry;
+
+import cwms.radar.api.RatingController;
+import cwms.radar.data.dao.DaoTest;
+import cwms.radar.data.dao.JsonRatingUtils;
+import cwms.radar.data.dao.JsonRatingUtilsTest;
+import cwms.radar.formatters.Formats;
+import cwms.radar.helpers.ResourceHelper;
+
+import fixtures.TestServletInputStream;
+
+import hec.data.cwmsRating.RatingSet;
+
+import io.javalin.core.util.Header;
+import io.javalin.http.Context;
+import io.javalin.http.HandlerType;
+import io.javalin.http.util.ContextUtil;
+import io.javalin.plugin.json.JavalinJackson;
+import io.javalin.plugin.json.JsonMapperKt;
+import io.restassured.response.Response;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -12,21 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import com.codahale.metrics.MetricRegistry;
-import cwms.radar.api.RatingController;
-import cwms.radar.data.dao.DaoTest;
-import cwms.radar.data.dao.JsonRatingUtils;
-import cwms.radar.data.dao.JsonRatingUtilsTest;
-import cwms.radar.formatters.Formats;
-import cwms.radar.helpers.ResourceHelper;
-import fixtures.TestServletInputStream;
-import io.javalin.core.util.Header;
-import io.javalin.http.Context;
-import io.javalin.http.HandlerType;
-import io.javalin.http.util.ContextUtil;
-import io.javalin.plugin.json.JavalinJackson;
-import io.javalin.plugin.json.JsonMapperKt;
-import io.restassured.response.Response;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.tools.jdbc.MockConnection;
 import org.jooq.tools.jdbc.MockFileDatabase;
@@ -35,25 +49,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import hec.data.cwmsRating.RatingSet;
-
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
 public class RatingsControllerTest {
 
     private DataSource ds = mock(DataSource.class);
     private Connection conn = null;
 
 
+    @SuppressWarnings("checkstyle:missingjavadocmethod")
     @BeforeEach
-    public void baseLineDbMocks() throws SQLException, IOException{
+    public void baseLineDbMocks() throws SQLException, IOException {
         InputStream stream = RatingsControllerTest.class.getResourceAsStream("/ratings_db.txt");
         assertNotNull(stream);
         this.conn = new MockConnection(
@@ -64,18 +68,18 @@ public class RatingsControllerTest {
     }
 
 
-        // This is only supposed to test that when XML data is posted to create,
+    // This is only supposed to test that when XML data is posted to create,
     // that data is forward to the method deserializeFromXml
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void post_to_create_passed_to_deserializeXml() throws Exception
-    {
+    void post_to_create_passed_to_deserializeXml() throws Exception {
         final String testBody = "could be anything";
 
 
-        RatingController controller = spy(new RatingController(new MetricRegistry()));
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        HashMap<String,Object> attributes = new HashMap<>();
+        final RatingController controller = spy(new RatingController(new MetricRegistry()));
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final HashMap<String,Object> attributes = new HashMap<>();
         attributes.put(ContextUtil.maxRequestSizeKey,Integer.MAX_VALUE);
         attributes.put(JsonMapperKt.JSON_MAPPER_KEY,new JavalinJackson());
 
@@ -87,7 +91,8 @@ public class RatingsControllerTest {
         when(request.getContentLength()).thenReturn(testBody.length());
         when(request.getAttribute("database")).thenReturn(this.conn);
 
-        assertNotNull( context.attribute("database"), "could not get the connection back as an attribute");
+        assertNotNull(context.attribute("database"),
+                       "could not get the connection back as an attribute");
 
         when(request.getHeader(Header.ACCEPT)).thenReturn(Formats.XMLV2);
         when(request.getContentType()).thenReturn(Formats.XMLV2);
@@ -96,20 +101,20 @@ public class RatingsControllerTest {
         controller.create(context);
         // For this test, it's ok that the server throws a RatingException
         // Only want to check that the controller accessed our mock dao in the expected way
-        verify(controller, times(1)).deserializeRatingSet(testBody, Formats.XML);  // Curious that it is XML and not XMLv2
+        verify(controller, times(1))
+            .deserializeRatingSet(testBody, Formats.XML);  // Curious that it is XML and not XMLv2
 
     }
 
     @Disabled("incomplete")
     @Test
-    void retrieve_create_retrieve_delete_retrieve_json() throws Exception{
+    void retrieve_create_retrieve_delete_retrieve_json() throws Exception {
         // Do whatever we need to do to startup the server
         int port = 7000;
         DataSource testDS = buildDataSource();
         String baseUri = "http://localhost:" + port;
         //// Todo: there needs to be some sort of Tomcat start here.
-        try
-        {
+        try {
             // Read in a resource and build our test data
             String resourcePath = "cwms/radar/data/dao/BEAV.Stage_Flow.BASE.PRODUCTION.xml";
             String refRating = JsonRatingUtilsTest.loadResourceAsString(resourcePath);
@@ -122,10 +127,11 @@ public class RatingsControllerTest {
             String newLoc = "TESTLOC";
 
             String testSpecId = refSpecId.replace("BEAV", newLoc);
-            String testRatingJson = refRatingJson.replace("BEAV", newLoc).replace("Beaver", "TestLoc");
+            String testRatingJson = refRatingJson
+                                            .replace("BEAV", newLoc)
+                                            .replace("Beaver", "TestLoc");
 
-            try
-            {
+            try {
                 // Make sure we can't find the new rating
                 Response missingReponse = given()
                         .baseUri(baseUri)
@@ -165,9 +171,7 @@ public class RatingsControllerTest {
                         .response();
                 Assertions.assertEquals(200, secondGetReponse.statusCode());
                 // Cool, got it.
-            }
-            finally
-            {
+            } finally {
                 // Now lets delete it
                 Response deleteReponse = given()
                         .baseUri(baseUri)
@@ -181,21 +185,20 @@ public class RatingsControllerTest {
                 Assertions.assertEquals(200, deleteReponse.statusCode());
                 // Cool its gone.
             }
-        }finally {
+        } finally {
             // Maybe somesort of Tomcat shutdown here?
         }
     }
 
     @Disabled("incomplete")
     @Test
-    void retrieve_create_retrieve_delete_retrieve_xml() throws Exception{
+    void retrieve_create_retrieve_delete_retrieve_xml() throws Exception {
         // Do whatever we need to do to startup the server
         int port = 7000;
         DataSource testDS = buildDataSource();
         String baseUri = "http://localhost:" + port;
         //// Todo: there needs to be some sort of Tomcat start here.
-        try
-        {
+        try {
             // Read in a resource and build our test data
             String resourcePath = "cwms/radar/data/dao/BEAV.Stage_Flow.BASE.PRODUCTION.xml";
             String refRatingXml = JsonRatingUtilsTest.loadResourceAsString(resourcePath);
@@ -208,10 +211,11 @@ public class RatingsControllerTest {
             String newLoc = "TESTLOC";
 
             String testSpecId = refSpecId.replace("BEAV", newLoc);
-            String testRatingXml = refRatingXml.replace("BEAV", newLoc).replace("Beaver", "TestLoc");
+            String testRatingXml = refRatingXml
+                                    .replace("BEAV", newLoc)
+                                    .replace("Beaver", "TestLoc");
 
-            try
-            {
+            try {
                 // Make sure we can't find the new rating
                 Response missingReponse = given()
                         .baseUri(baseUri)
@@ -250,9 +254,7 @@ public class RatingsControllerTest {
                         .response();
                 Assertions.assertEquals(200, secondGetReponse.statusCode());
                 // Cool, got it.
-            }
-            finally
-            {
+            } finally {
                 // Now lets delete it
                 Response deleteReponse = given()
                         .baseUri(baseUri)
@@ -266,68 +268,57 @@ public class RatingsControllerTest {
                 Assertions.assertEquals(200, deleteReponse.statusCode());
                 // Cool its gone.
             }
-        }finally {
+        } finally {
             // Maybe somesort of Tomcat shutdown here?
         }
     }
 
 
     @Nullable
-    private DataSource buildDataSource()
-    {
-        DataSource testDS = new DataSource()
-        {
+    private DataSource buildDataSource() {
+        DataSource testDS = new DataSource() {
             @Override
-            public Connection getConnection() throws SQLException
-            {
+            public Connection getConnection() throws SQLException {
                 return DaoTest.getConnection();
             }
 
             @Override
-            public Connection getConnection(String username, String password) throws SQLException
-            {
+            public Connection getConnection(String username, String password) throws SQLException {
                 return DaoTest.getConnection();
             }
 
             @Override
-            public <T> T unwrap(Class<T> iface) throws SQLException
-            {
+            public <T> T unwrap(Class<T> iface) throws SQLException {
                 return null;
             }
 
             @Override
-            public boolean isWrapperFor(Class<?> iface) throws SQLException
-            {
+            public boolean isWrapperFor(Class<?> iface) throws SQLException {
                 return false;
             }
 
             @Override
-            public PrintWriter getLogWriter() throws SQLException
-            {
+            public PrintWriter getLogWriter() throws SQLException {
                 return null;
             }
 
             @Override
-            public void setLogWriter(PrintWriter out) throws SQLException
-            {
+            public void setLogWriter(PrintWriter out) throws SQLException {
 
             }
 
             @Override
-            public void setLoginTimeout(int seconds) throws SQLException
-            {
+            public void setLoginTimeout(int seconds) throws SQLException {
 
             }
 
             @Override
-            public int getLoginTimeout() throws SQLException
-            {
+            public int getLoginTimeout() throws SQLException {
                 return 0;
             }
 
             @Override
-            public Logger getParentLogger() throws SQLFeatureNotSupportedException
-            {
+            public Logger getParentLogger() throws SQLFeatureNotSupportedException {
                 return null;
             }
         };

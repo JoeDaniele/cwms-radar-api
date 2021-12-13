@@ -1,8 +1,9 @@
 package cwms.radar.formatters;
 
+import cwms.radar.formatters.json.JsonV2;
+
 import org.junit.jupiter.api.Test;
 
-import cwms.radar.formatters.json.JsonV2;
 
 public class JsonV2Test extends TimeSeriesTestBase {
 
@@ -13,7 +14,7 @@ public class JsonV2Test extends TimeSeriesTestBase {
 
     @Test
     @Override
-    public void SingleTimeseriesFormat() {
-        super.SingleTimeseriesFormat();
+    public void singleTimeseriesFormat() {
+        super.singleTimeseriesFormat();
     }
 }

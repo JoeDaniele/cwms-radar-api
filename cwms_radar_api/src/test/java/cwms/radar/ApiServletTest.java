@@ -1,17 +1,16 @@
 package cwms.radar;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class ApiServletTest {
 
     @Test
-    public void test_office_from_context_hq(){
+    public void test_office_from_context_hq() {
         String office = null;
 
         office = ApiServlet.officeFromContext("/cwms-data");
@@ -25,7 +24,7 @@ public class ApiServletTest {
     }
 
     @ParameterizedTest
-    @CsvSource( value = { "/spk-data,SPK", "/nwdm-data,NWDM", "/nww-data,NWW", "/swt-data,SWT"} )
+    @CsvSource(value = { "/spk-data,SPK", "/nwdm-data,NWDM", "/nww-data,NWW", "/swt-data,SWT"})
     void test_office_from_context_district(String context, String office) {
         String returnedOffice = ApiServlet.officeFromContext(context);
         assertTrue(office.equals(returnedOffice), "failed to process an office context correctly");

@@ -1,23 +1,24 @@
 package cwms.radar.api;
 
-import cwms.radar.data.dto.LocationLevel;
-import cwms.radar.formatters.Formats;
-import cwms.radar.formatters.xml.adapters.ZonedDateTimeAdapter;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class LevelControllerTest extends ControllerTest
-{
+import cwms.radar.data.dto.LocationLevel;
+import cwms.radar.formatters.Formats;
+import cwms.radar.formatters.xml.adapters.ZonedDateTimeAdapter;
+
+import org.junit.jupiter.api.Test;
+
+class LevelControllerTest extends ControllerTest {
     private static final String OFFICE_ID = "LRL";
+
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeSeasonalLevelXml() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String xml = loadResourceAsString("cwms/radar/api/levels_seasonal_create.xml");
+    void testDeserializeSeasonalLevelXml() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String xml = loadResourceAsString("cwms/radar/api/levels_seasonal_create.xml");
         assertNotNull(xml);
-        LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());
@@ -26,13 +27,13 @@ class LevelControllerTest extends ControllerTest
         assertEquals(10.0, level.getSeasonalValues().get(0).getValue());
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeSeasonalLevelJSON() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String json = loadResourceAsString("cwms/radar/api/levels_seasonal_create.json");
+    void testDeserializeSeasonalLevelJSON() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String json = loadResourceAsString("cwms/radar/api/levels_seasonal_create.json");
         assertNotNull(json);
-        LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());
@@ -41,13 +42,13 @@ class LevelControllerTest extends ControllerTest
         assertEquals(10.0, level.getSeasonalValues().get(0).getValue());
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeConstantLevelXml() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String xml = loadResourceAsString("cwms/radar/api/levels_constant_create.xml");
+    void testDeserializeConstantLevelXml() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String xml = loadResourceAsString("cwms/radar/api/levels_constant_create.xml");
         assertNotNull(xml);
-        LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());
@@ -56,13 +57,13 @@ class LevelControllerTest extends ControllerTest
         assertEquals(10.0, level.getSiParameterUnitsConstantValue());
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeConstantLevelJSON() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String json = loadResourceAsString("cwms/radar/api/levels_constant_create.json");
+    void testDeserializeConstantLevelJSON() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String json = loadResourceAsString("cwms/radar/api/levels_constant_create.json");
         assertNotNull(json);
-        LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());
@@ -71,13 +72,13 @@ class LevelControllerTest extends ControllerTest
         assertEquals(10.0, level.getSiParameterUnitsConstantValue());
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeTimeSeriesLevelXml() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String xml = loadResourceAsString("cwms/radar/api/levels_timeseries_create.xml");
+    void testDeserializeTimeSeriesLevelXml() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String xml = loadResourceAsString("cwms/radar/api/levels_timeseries_create.xml");
         assertNotNull(xml);
-        LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(xml, Formats.XML, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());
@@ -86,13 +87,13 @@ class LevelControllerTest extends ControllerTest
         assertEquals("RYAN3.Stage.Inst.5Minutes.0.ZSTORE_TS_TEST630", level.getSeasonalTimeSeriesId());
     }
 
+    @SuppressWarnings("checkstyle:linelength")
     @Test
-    void testDeserializeTimeSeriesLevelJSON() throws Exception
-    {
-        ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
-        String json = loadResourceAsString("cwms/radar/api/levels_timeseries_create.json");
+    void testDeserializeTimeSeriesLevelJSON() throws Exception {
+        final ZonedDateTimeAdapter dateTimeAdapter = new ZonedDateTimeAdapter();
+        final String json = loadResourceAsString("cwms/radar/api/levels_timeseries_create.json");
         assertNotNull(json);
-        LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
+        final LocationLevel level = LevelsController.deserializeLocationLevel(json, Formats.JSON, OFFICE_ID);
         assertNotNull(level);
         assertEquals("LOC_TEST.Elev.Inst.0.Bottom of Inlet", level.getLocationId());
         assertEquals(OFFICE_ID, level.getOfficeId());

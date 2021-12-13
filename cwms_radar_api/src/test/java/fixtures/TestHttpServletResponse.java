@@ -19,14 +19,13 @@ public class TestHttpServletResponse implements HttpServletResponse {
      * We will default to OK in all handlers as that is the behavior we see from javalin.
      */
     private int status = HttpCode.OK.getStatus();
-    private String contentType="<not set by application>";
+    private String contentType = "<not set by application>";
 
     private ServletOutputStream output = new TestServletOutputStream();
 
     @Override
     public void flushBuffer() throws IOException {
         // TODO Auto-generated method stub
-
     }
 
     @Override

@@ -1,30 +1,5 @@
 package cwms.radar.api;
 
-import cwms.radar.api.enums.Nation;
-import cwms.radar.data.dto.Location;
-import cwms.radar.formatters.Formats;
-import cwms.radar.security.CwmsAuthException;
-import cwms.radar.security.CwmsAuthorizer;
-import cwms.radar.security.CwmsNoAuthorizer;
-import fixtures.TestHttpServletResponse;
-import fixtures.TestServletInputStream;
-import io.javalin.http.Context;
-import io.javalin.http.HandlerType;
-import io.javalin.http.util.ContextUtil;
-import io.javalin.plugin.json.JavalinJackson;
-import io.javalin.plugin.json.JsonMapperKt;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.codahale.metrics.MetricRegistry;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,13 +8,38 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class LocationControllerTest extends ControllerTest
-{
+import com.codahale.metrics.MetricRegistry;
+
+import cwms.radar.api.enums.Nation;
+import cwms.radar.data.dto.Location;
+import cwms.radar.formatters.Formats;
+import cwms.radar.security.CwmsAuthException;
+import cwms.radar.security.CwmsAuthorizer;
+import cwms.radar.security.CwmsNoAuthorizer;
+
+import fixtures.TestHttpServletResponse;
+import fixtures.TestServletInputStream;
+
+import io.javalin.http.Context;
+import io.javalin.http.HandlerType;
+import io.javalin.http.util.ContextUtil;
+import io.javalin.plugin.json.JavalinJackson;
+import io.javalin.plugin.json.JsonMapperKt;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class LocationControllerTest extends ControllerTest {
     private static final String OFFICE_ID = "LRL";
 
     @Test
-    void testDeserializeLocationXml() throws IOException
-    {
+    void testDeserializeLocationXml() throws IOException {
         String xml = loadResourceAsString("cwms/radar/api/location_create.xml");
         assertNotNull(xml);
         Location location = LocationController.deserializeLocation(xml, Formats.XML, OFFICE_ID);
@@ -52,8 +52,7 @@ class LocationControllerTest extends ControllerTest
     }
 
     @Test
-    void testDeserializeLocationJSON() throws IOException
-    {
+    void testDeserializeLocationJSON() throws IOException {
         String json = loadResourceAsString("cwms/radar/api/location_create.json");
         assertNotNull(json);
         Location location = LocationController.deserializeLocation(json, Formats.JSON, OFFICE_ID);
@@ -68,13 +67,14 @@ class LocationControllerTest extends ControllerTest
     /**
      * Test of getOne method, of class LocationController.
      */
+    @SuppressWarnings("checkstyle:linelength")
     @Test
     public void test_basic_operations() throws Exception {
         final String testBody = "";
-        LocationController instance = new LocationController(new MetricRegistry());
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = new TestHttpServletResponse();
-        HashMap<String,Object> attributes = new HashMap<>();
+        final LocationController instance = new LocationController(new MetricRegistry());
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = new TestHttpServletResponse();
+        final HashMap<String,Object> attributes = new HashMap<>();
         attributes.put(ContextUtil.maxRequestSizeKey,Integer.MAX_VALUE);
         attributes.put(JsonMapperKt.JSON_MAPPER_KEY,new JavalinJackson());
         attributes.put("Authorizer",new CwmsNoAuthorizer());
@@ -85,24 +85,24 @@ class LocationControllerTest extends ControllerTest
 
         when(request.getAttribute("database")).thenReturn(getTestConnection());
 
-        assertNotNull( context.attribute("database"), "could not get the connection back as an attribute");
+        assertNotNull(context.attribute("database"), "could not get the connection back as an attribute");
         System.out.println("getOne");
-        String Location_id = "SimpleNoAlias";
+        String locationId = "SimpleNoAlias";
 
 
-        instance.getOne(context, Location_id);
+        instance.getOne(context, locationId);
         assertEquals(200,context.status(), "incorrect status code returned");
 
-        assertThrows( CwmsAuthException.class , () -> {
+        assertThrows(CwmsAuthException.class, () -> {
             instance.create(context);
         });
 
-        assertThrows( CwmsAuthException.class, () -> {
-            instance.update(context, Location_id);
+        assertThrows(CwmsAuthException.class, () -> {
+            instance.update(context, locationId);
         });
 
-        assertThrows( CwmsAuthException.class, () -> {
-            instance.delete(context, Location_id);
+        assertThrows(CwmsAuthException.class, () -> {
+            instance.delete(context, locationId);
         });
 
     }

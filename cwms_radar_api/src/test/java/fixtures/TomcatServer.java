@@ -56,12 +56,17 @@ public class TomcatServer {
         tomcatInstance.addContext("", null);
 
         File radar = new File(radarWar);
-        try{
-            File existingRadar = new File(tomcatInstance.getHost().getAppBaseFile().getAbsolutePath(),contextName);
-            Files.walk(existingRadar.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        try {
+            File existingRadar = new File(tomcatInstance.getHost()
+                                    .getAppBaseFile()
+                                    .getAbsolutePath(),contextName);
+            Files.walk(existingRadar.toPath())
+                 .sorted(Comparator.reverseOrder())
+                 .map(Path::toFile)
+                 .forEach(File::delete);
             existingRadar.delete();
-            new File(existingRadar.getAbsolutePath()+".war").delete();
-        } catch( Exception err) {
+            new File(existingRadar.getAbsolutePath() + ".war").delete();
+        } catch (Exception err) {
             System.out.println(err.getLocalizedMessage());
         }
         tomcatInstance.addWebapp(contextName,radar.toURI().toURL());

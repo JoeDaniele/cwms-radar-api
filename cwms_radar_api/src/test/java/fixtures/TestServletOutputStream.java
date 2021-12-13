@@ -25,7 +25,7 @@ public class TestServletOutputStream extends ServletOutputStream {
         realOutput.write(b);
     }
 
-    public String getOutput(){
+    public String getOutput() {
         return realOutput.toString();
     }
 

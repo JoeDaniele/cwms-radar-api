@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class CwmsNormalAuthorizorTest {
 
     @Test
-    public void test_not_in_role_throws_exception(){
+    public void test_not_in_role_throws_exception() {
         HttpServletRequest request = mock(HttpServletRequest.class);
 
         when(request.isUserInRole("CWMS Users")).thenReturn(false);
@@ -34,7 +34,7 @@ public class CwmsNormalAuthorizorTest {
         CwmsAuthorizer authorizer = new CwmsNormalAuthorizer();
 
 
-        assertDoesNotThrow( () -> {
+        assertDoesNotThrow(() -> {
             authorizer.can_perform(request,null);
         });
     }

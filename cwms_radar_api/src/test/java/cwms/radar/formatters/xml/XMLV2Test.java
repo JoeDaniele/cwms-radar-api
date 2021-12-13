@@ -1,11 +1,10 @@
 package cwms.radar.formatters.xml;
 
-import org.junit.jupiter.api.Test;
-
 import cwms.radar.formatters.OutputFormatter;
 import cwms.radar.formatters.TimeSeriesTestBase;
 import cwms.radar.formatters.xml.XMLv2;
 
+import org.junit.jupiter.api.Test;
 
 public class XMLV2Test extends TimeSeriesTestBase {
 
@@ -16,7 +15,7 @@ public class XMLV2Test extends TimeSeriesTestBase {
 
     @Test
     @Override
-    public void SingleTimeseriesFormat() {
-        super.SingleTimeseriesFormat();
+    public void singleTimeseriesFormat() {
+        super.singleTimeseriesFormat();
     }
 }
