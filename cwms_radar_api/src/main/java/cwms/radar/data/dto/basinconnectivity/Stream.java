@@ -1,12 +1,17 @@
 package cwms.radar.data.dto.basinconnectivity;
 
 import cwms.radar.data.dto.CwmsDTO;
-import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.*;
+import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.BuildConfluenceBank;
+import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.BuildConfluenceStation;
+import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.BuildDiversionBank;
+import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.BuildDiversionStation;
+import cwms.radar.data.dto.basinconnectivity.buildercontracts.stream.BuildStream;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public final class Stream implements CwmsDTO
-{
+public final class Stream implements CwmsDTO {
     private final String streamName;
     private final List<Stream> tributaries;//streams that flow into this
     private final List<StreamReach> streamReaches;
@@ -23,8 +28,7 @@ public final class Stream implements CwmsDTO
     private final String comment;
     private final Double averageSlope;
 
-    private Stream(Builder streamBuilder)
-    {
+    private Stream(Builder streamBuilder) {
         streamName = streamBuilder.streamName;
         startsDownstream = streamBuilder.startsDownstream;
         divertingStreamId = streamBuilder.divertingStreamId;
@@ -42,83 +46,69 @@ public final class Stream implements CwmsDTO
         officeId = streamBuilder.officeId;
     }
 
-    public List<StreamLocation> getStreamLocations()
-    {
+    public List<StreamLocation> getStreamLocations() {
         return new ArrayList<>(streamLocations);
     }
 
-    public List<StreamReach> getStreamReaches()
-    {
+    public List<StreamReach> getStreamReaches() {
         return new ArrayList<>(streamReaches);
     }
 
-    public List<Stream> getTributaries()
-    {
+    public List<Stream> getTributaries() {
         return new ArrayList<>(tributaries);
     }
 
-    public String getStreamName()
-    {
+    public String getStreamName() {
         return streamName;
     }
 
-    public String getDivertingStreamId()
-    {
+    public String getDivertingStreamId() {
         return divertingStreamId;
     }
 
-    public String getReceivingStreamId()
-    {
+    public String getReceivingStreamId() {
         return receivingStreamId;
     }
 
-    public boolean startsDownstream()
-    {
+    public boolean startsDownstream() {
         return startsDownstream;
     }
 
-    public String getDiversionBank()
-    {
+    public String getDiversionBank() {
         return diversionBank;
     }
 
-    public String getConfluenceBank()
-    {
+    public String getConfluenceBank() {
         return confluenceBank;
     }
 
-    public Double getStreamLength()
-    {
+    public Double getStreamLength() {
         return streamLength;
     }
 
-    public Double getConfluenceStation()
-    {
+    public Double getConfluenceStation() {
         return confluenceStation;
     }
 
-    public Double getDiversionStation()
-    {
+    public Double getDiversionStation() {
         return diversionStation;
     }
 
-    public String getComment()
-    {
+    public String getComment() {
         return comment;
     }
 
-    public Double getAverageSlope()
-    {
+    public Double getAverageSlope() {
         return averageSlope;
     }
 
-    public String getOfficeId()
-    {
+    public String getOfficeId() {
         return officeId;
     }
 
-    public static class Builder implements BuildStream, BuildDiversionStation, BuildConfluenceStation, BuildDiversionBank, BuildConfluenceBank
-    {
+    public static class Builder implements BuildStream, BuildDiversionStation,
+                                           BuildConfluenceStation, BuildDiversionBank,
+                                           BuildConfluenceBank {
         private final String officeId;
         private final String streamName;
         private final boolean startsDownstream;
@@ -135,13 +125,25 @@ public final class Stream implements CwmsDTO
         private String comment;
         private Double averageSlope;
 
-        public Builder(String streamName, boolean startsDownstream, Double streamLength, String officeId) {
+        /**
+         * Create a new stream.
+         * @param streamName the name of the stream
+         * @param startsDownstream indicator of reference point is the end or start of the stream.
+         * @param streamLength how long the stream is
+         * @param officeId office "owning" the stream
+         */
+        public Builder(String streamName, boolean startsDownstream,
+                       Double streamLength, String officeId) {
             this.streamName = streamName;
             this.startsDownstream = startsDownstream;
             this.streamLength = streamLength;
             this.officeId = officeId;
         }
 
+        /**
+         * Create a new stream from an existing stream.
+         * @param stream an existing stream.
+         */
         public Builder(Stream stream) {
             this.streamName = stream.getStreamName();
             this.startsDownstream = stream.startsDownstream();
@@ -199,18 +201,27 @@ public final class Stream implements CwmsDTO
             return new Stream(this);
         }
 
+        /**
+         * Set the locations that this stream includes.
+         */
         public BuildStream withStreamLocations(Collection<StreamLocation> streamLocations) {
             this.streamLocations.clear();
             this.streamLocations.addAll(streamLocations);
             return this;
         }
 
+        /**
+         * List of tributaries going into this stream.
+         */
         public BuildStream withTributaries(Collection<Stream> tributaries) {
             this.tributaries.clear();
             this.tributaries.addAll(tributaries);
             return this;
         }
 
+        /**
+         * List of reaches to include in this stream element.
+         */
         public BuildStream withStreamReaches(Collection<StreamReach> streamReaches) {
             this.streamReaches.clear();
             this.streamReaches.addAll(streamReaches);
@@ -229,4 +240,3 @@ public final class Stream implements CwmsDTO
     }
 
 }
-

@@ -13,77 +13,80 @@ import java.math.BigInteger;
 @JsonDeserialize(builder = SeasonalValueBean.Builder.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class SeasonalValueBean
-{
+public class SeasonalValueBean {
     private final Double value;
     private final Integer offsetMonths;
     private final BigInteger offsetMinutes;
 
-    private SeasonalValueBean(Builder builder)
-    {
+    private SeasonalValueBean(Builder builder) {
         this.value = builder.value;
         this.offsetMinutes = builder.offsetMinutes;
         this.offsetMonths = builder.offsetMonths;
     }
 
-    public Double getValue()
-    {
+    public Double getValue() {
         return value;
     }
-    public BigInteger getOffsetMinutes()
-    {
+
+    public BigInteger getOffsetMinutes() {
         return offsetMinutes;
     }
-    public Integer getOffsetMonths()
-    {
+
+    public Integer getOffsetMonths() {
         return offsetMonths;
     }
 
     @JsonPOJOBuilder
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-    public static class Builder
-    {
+    public static class Builder {
         private final Double value;
         private Integer offsetMonths;
         private BigInteger offsetMinutes;
 
 
-        public Builder(@JsonProperty(value = "value") Double value)
-        {
+        /**
+         * Create a new SeasonalValue.
+         * TODO: verify is this technically valid.
+         * @param value value to use.
+         */
+        public Builder(@JsonProperty(value = "value") Double value) {
             this.value = value;
             this.offsetMonths = null;
             this.offsetMinutes = null;
         }
 
+        /**
+         * Create a new SeasonalValue. Helper for XML Mapper processing as a string.
+         * @param value string representation of a double value to use.
+         */
         @JsonCreator
-        public Builder(@JsonProperty(value = "value") String value) //deserialization with XML Mapper sees this as a string
-        {
+        public Builder(@JsonProperty(value = "value") String value) {
             this.value = Double.valueOf(value);
             this.offsetMonths = null;
             this.offsetMinutes = null;
         }
 
-        public Builder(SeasonalValueBean bean)
-        {
+        /**
+         * copy an existing SeasonalValue.
+         * @param bean exist value
+         */
+        public Builder(SeasonalValueBean bean) {
             this.value = bean.getValue();
             this.offsetMonths = bean.getOffsetMonths();
             this.offsetMinutes = bean.getOffsetMinutes();
         }
 
-        public Builder withOffsetMinutes(BigInteger totalOffsetMinutes)
-        {
+        public Builder withOffsetMinutes(BigInteger totalOffsetMinutes) {
             offsetMinutes = totalOffsetMinutes;
             return this;
         }
 
-        public Builder withOffsetMonths(Integer totalOffsetMonths)
-        {
+        public Builder withOffsetMonths(Integer totalOffsetMonths) {
             offsetMonths = totalOffsetMonths;
             return this;
         }
 
-        public SeasonalValueBean build()
-        {
+        public SeasonalValueBean build() {
             return new SeasonalValueBean(this);
         }
 

@@ -1,7 +1,5 @@
 package cwms.radar.formatters.csv;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -17,19 +15,20 @@ import cwms.radar.data.dto.LocationGroup;
 import cwms.radar.formatters.Formats;
 import cwms.radar.formatters.OutputFormatter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 
-
+@SuppressWarnings({"checkstyle:linelength"})
 @Schema(
     name = "LocationGroup_CSV",
     description = "Single LocationGroup or List of LocationGroups in comma separated format",
     example =
-    "#LocationGroup Id, OfficeId, Description, CategoryId, CategoryOfficeId, SharedLocAliasId, SharedRefLocationId, LocGroupAttribute\r\n"+
-    "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"+
-    "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n" +
-    "NAB,Baltimore District,District,NAD\r\n"+
-    "NAD,North Atlantic Division,Division Headquarters,HQ"
+    "#LocationGroup Id, OfficeId, Description, CategoryId, CategoryOfficeId, SharedLocAliasId, SharedRefLocationId, LocGroupAttribute\r\n"
+    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"
+    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n"
+    + "NAB,Baltimore District,District,NAD\r\n"
+    + "NAD,North Atlantic Division,Division Headquarters,HQ"
 )
-public class CsvV1LocationGroup implements OutputFormatter{
+public class CsvV1LocationGroup implements OutputFormatter {
 
 
     @Schema(hidden = true)
@@ -38,26 +37,7 @@ public class CsvV1LocationGroup implements OutputFormatter{
         return Formats.CSV;
     }
 
-    @Override
-    public String format(CwmsDTO dto) {
-        LocationGroup locationGroup = (LocationGroup)dto;
-
-        ObjectWriter writer = buildWriter();
-        try
-        {
-            String s = writer.writeValueAsString(locationGroup);
-            return "#LocationGroup " + s;
-        }
-        catch(JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private ObjectWriter buildWriter()
-    {
+    private ObjectWriter buildWriter() {
         CsvMapper mapper = new CsvMapper();
         mapper.addMixInAnnotations(LocationGroup.class, LocationGroupFormat.class);
         mapper.addMixInAnnotations(LocationCategory.class, LocationCategoryFormat.class);
@@ -71,17 +51,29 @@ public class CsvV1LocationGroup implements OutputFormatter{
     }
 
     @Override
+    public String format(CwmsDTO dto) {
+        LocationGroup locationGroup = (LocationGroup)dto;
+
+        ObjectWriter writer = buildWriter();
+        try {
+            String s = writer.writeValueAsString(locationGroup);
+            return "#LocationGroup " + s;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
     @SuppressWarnings("unchecked") // for the daoList conversion
-    public String format(List<? extends CwmsDTO> dtoList) {        
+    public String format(List<? extends CwmsDTO> dtoList) {
         List<LocationGroup> locationGroups = (List<LocationGroup>)dtoList;
         ObjectWriter writer = buildWriter();
-        try
-        {
+        try {
             String s = writer.writeValueAsString(locationGroups);
             return  "#LocationGroup " + s;
-        }
-        catch(JsonProcessingException e)
-        {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
@@ -96,8 +88,7 @@ public class CsvV1LocationGroup implements OutputFormatter{
     // serialize like LocationGroupFormat
     @JsonPropertyOrder({"id",  "officeId", "description", "locationCategory",
             "sharedLocAliasId", "sharedRefLocationId", "locGroupAttribute" })
-    private static abstract class LocationGroupFormat
-    {
+    private abstract static class LocationGroupFormat {
 
         @JsonProperty("Id")
         abstract String getId();
@@ -126,8 +117,7 @@ public class CsvV1LocationGroup implements OutputFormatter{
     }
 
     // Mixin for LocationCategory
-    private static abstract class LocationCategoryFormat
-    {
+    private abstract static class LocationCategoryFormat {
         @JsonProperty("CategoryOfficeId")
         abstract String getOfficeId();
 

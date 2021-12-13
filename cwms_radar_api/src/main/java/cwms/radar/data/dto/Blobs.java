@@ -1,5 +1,7 @@
 package cwms.radar.data.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,9 +12,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 
-@XmlRootElement(name="blobs")
+@XmlRootElement(name = "blobs")
 @XmlSeeAlso(Blob.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Blobs extends CwmsDTOPaginated {
@@ -23,13 +24,13 @@ public class Blobs extends CwmsDTOPaginated {
     @Schema(implementation = Blob.class, description = "List of retrieved blobs")
     List<Blob> blobs;
 
-
-
     @SuppressWarnings("unused") // for JAXB to handle marshalling
-    private Blobs(){}
+    private Blobs(){
+
+    }
 
 
-    private Blobs(String cursor, int pageSize, int total){
+    private Blobs(String cursor, int pageSize, int total) {
         super(cursor, pageSize, total);
         blobs = new ArrayList<>();
     }
@@ -44,7 +45,7 @@ public class Blobs extends CwmsDTOPaginated {
             workingBlobs = new Blobs(cursor, pageSize, total);
         }
 
-        public Blobs build(){
+        public Blobs build() {
             if( this.workingBlobs.blobs.size() == this.workingBlobs.pageSize){
                 this.workingBlobs.nextPage = encodeCursor(
                             this.workingBlobs.blobs.get(this.workingBlobs.blobs.size()-1).toString().toUpperCase(),
@@ -58,12 +59,12 @@ public class Blobs extends CwmsDTOPaginated {
 
         }
 
-        public Builder addBlob(Blob blob){
+        public Builder addBlob(Blob blob) {
             this.workingBlobs.blobs.add(blob);
             return this;
         }
 
-        public Builder addAll(List<Blob> toAdd ){
+        public Builder addAll(List<Blob> toAdd ) {
             this.workingBlobs.blobs.addAll(toAdd);
             return this;
         }

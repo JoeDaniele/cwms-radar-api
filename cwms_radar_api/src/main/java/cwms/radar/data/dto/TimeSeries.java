@@ -1,5 +1,18 @@
 package cwms.radar.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import cwms.radar.data.dto.TimeSeries.Record;
+import cwms.radar.formatters.xml.adapters.DurationAdapter;
+import cwms.radar.formatters.xml.adapters.TimestampAdapter;
+import cwms.radar.formatters.xml.adapters.ZonedDateTimeAdapter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
+
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -18,20 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import cwms.radar.data.dto.TimeSeries.Record;
-import cwms.radar.formatters.xml.adapters.DurationAdapter;
-import cwms.radar.formatters.xml.adapters.TimestampAdapter;
-import cwms.radar.formatters.xml.adapters.ZonedDateTimeAdapter;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
-
-@XmlRootElement(name="timeseries")
+@XmlRootElement(name = "timeseries")
 @XmlSeeAlso(Record.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
@@ -56,31 +56,66 @@ public class TimeSeries extends CwmsDTOPaginated {
 
     @XmlJavaTypeAdapter(ZonedDateTimeAdapter.class)
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
-    @Schema(description = "The requested start time of the data, in ISO-8601 format with offset and timezone ('" + ZONED_DATE_TIME_FORMAT + "')")
+    @Schema(description = "The requested start time of the data,"
+                        + " in ISO-8601 format with offset"
+                        + " and timezone ('" + ZONED_DATE_TIME_FORMAT + "')")
     ZonedDateTime begin;
 
     @XmlJavaTypeAdapter(ZonedDateTimeAdapter.class)
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
-    @Schema(description = "The requested end time of the data, in ISO-8601 format with offset and timezone ('" + ZONED_DATE_TIME_FORMAT + "')")
+    @Schema(description = "The requested end time of the data,"
+                        + " in ISO-8601 format with offset"
+                        + " and timezone ('" + ZONED_DATE_TIME_FORMAT + "')")
     ZonedDateTime end;
 
     @XmlElementWrapper
-    @XmlElement(name="record")
+    @XmlElement(name = "record")
     // Use the array shape to optimize data transfer to client
-    @JsonFormat(shape=JsonFormat.Shape.ARRAY)
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     @Schema(implementation = Record.class, description = "List of retrieved time-series values")
     List<Record> values;
 
     VerticalDatumInfo verticalDatumInfo;
 
     @SuppressWarnings("unused") // required so JAXB can initialize and marshal
-    private TimeSeries() {}
+    private TimeSeries() {
 
-    public TimeSeries(String page, int pageSize, Integer total, String name, String officeId, ZonedDateTime begin, ZonedDateTime end, String units, Duration interval) {
+    }
+
+    /**
+     * Create a new timeseries without vertical datum info.
+     * @param page what page in the timeseries were not //TODO strip from this object
+     * @param pageSize pageSize we're using //TODO strip from this object
+     * @param total total number of elements // TODO strip from this object
+     * @param name time series name in CWMS dotted notation
+     * @param officeId owning office of the timeseries
+     * @param begin start time of the page
+     * @param end end time of the page
+     * @param units units
+     * @param interval interval between samples
+     */
+    public TimeSeries(String page, int pageSize, Integer total, String name,
+                      String officeId, ZonedDateTime begin, ZonedDateTime end,
+                      String units, Duration interval) {
         this(page, pageSize, total, name, officeId, begin, end, units, interval, null);
     }
 
-    public TimeSeries(String page, int pageSize, Integer total, String name, String officeId, ZonedDateTime begin, ZonedDateTime end, String units, Duration interval, VerticalDatumInfo info) {
+    /**
+     * Create a new timeseries with vertical datum info.
+     * @param page what page in the timeseries were not //TODO strip from this object
+     * @param pageSize pageSize we're using //TODO strip from this object
+     * @param total total number of elements // TODO strip from this object
+     * @param name time series name in CWMS dotted notation
+     * @param officeId owning office of the timeseries
+     * @param begin start time of the page
+     * @param end end time of the page
+     * @param units units
+     * @param interval interval between samples
+     * @param info vertical datum information for the associated location.
+     */
+    public TimeSeries(String page, int pageSize, Integer total, String name,
+                      String officeId, ZonedDateTime begin, ZonedDateTime end,
+                      String units, Duration interval, VerticalDatumInfo info) {
         super(page, pageSize, total);
         this.name = name;
         this.officeId = officeId;
@@ -107,7 +142,7 @@ public class TimeSeries extends CwmsDTOPaginated {
     @XmlTransient
     @JsonIgnore
     public long getIntervalMinutes() {
-         return interval.toMinutes();
+        return interval.toMinutes();
     }
 
     public Duration getInterval() {
@@ -126,14 +161,13 @@ public class TimeSeries extends CwmsDTOPaginated {
         return values;
     }
 
-    public VerticalDatumInfo getVerticalDatumInfo()
-    {
+    public VerticalDatumInfo getVerticalDatumInfo() {
         return verticalDatumInfo;
     }
 
 
-    @XmlElementWrapper(name="value-columns")
-    @XmlElement(name="column")
+    @XmlElementWrapper(name = "value-columns")
+    @XmlElement(name = "column")
     @JsonIgnore
     public List<Column> getValueColumnsXML() {
         return getColumnDescriptor("xml");
@@ -146,13 +180,21 @@ public class TimeSeries extends CwmsDTOPaginated {
         return getColumnDescriptor("json");
     }
 
+    /**
+     * Add a timeseries value to this instance.
+     * @param dateTime time of measurement/calculation
+     * @param value data value
+     * @param qualityCode encoded quality information
+     * @return false if we are at the page size boundary and won't story any more.
+     */
     public boolean addValue(Timestamp dateTime, Double value, int qualityCode) {
         // Set the current page, if not set
-        if((page == null || page.isEmpty()) && values.isEmpty()) {
+        if ((page == null || page.isEmpty()) && values.isEmpty()) {
             page = encodeCursor(String.format("%d", dateTime.getTime()), pageSize, total);
         }
-        if(pageSize > 0 && values.size() == pageSize) {
-            nextPage = encodeCursor(String.format("%d", dateTime.toInstant().toEpochMilli()), pageSize, total);
+        if (pageSize > 0 && values.size() == pageSize) {
+            nextPage = encodeCursor(
+                String.format("%d", dateTime.toInstant().toEpochMilli()), pageSize, total);
             return false;
         } else {
             return values.add(new Record(dateTime, value, qualityCode));
@@ -165,25 +207,24 @@ public class TimeSeries extends CwmsDTOPaginated {
         for (Field f: Record.class.getDeclaredFields()) {
             String fieldName = f.getName();
             int fieldIndex = -1;
-            if(format.equals("json")) {
+            if (format.equals("json")) {
                 JsonProperty field = f.getAnnotation(JsonProperty.class);
-                if(field != null)
+                if (field != null) {
                     fieldName = !field.value().isEmpty() ? field.value() : f.getName();
+                }
                 fieldIndex = field.index();
-            }
-            else if(format.equals("xml")) {
+            } else if (format.equals("xml")) {
                 XmlType xmltype = Record.class.getAnnotation(XmlType.class);
-                if(xmltype != null) {
+                if (xmltype != null) {
                     String[] props = xmltype.propOrder();
-                    for(int idx = 0; idx < props.length; idx++) {
-                        if( props[idx].equals(fieldName)) {
+                    for (int idx = 0; idx < props.length; idx++) {
+                        if (props[idx].equals(fieldName)) {
                             fieldIndex = idx;
                             break;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 fieldIndex++;
             }
 
@@ -202,7 +243,8 @@ public class TimeSeries extends CwmsDTOPaginated {
         @JsonProperty(value = "date-time", index = 0)
         @XmlJavaTypeAdapter(TimestampAdapter.class)
         @XmlElement(name = "date-time")
-        @Schema(implementation = Long.class, description = "Milliseconds since 1970-01-01 (Unix Epoch)")
+        @Schema(implementation = Long.class,
+                description = "Milliseconds since 1970-01-01 (Unix Epoch)")
         Timestamp dateTime;
 
         @JsonProperty(index = 1)
@@ -214,7 +256,9 @@ public class TimeSeries extends CwmsDTOPaginated {
         int qualityCode;
 
         @SuppressWarnings("unused") // required so JAXB can initialize and marshal
-        private Record() {}
+        private Record() {
+
+        }
 
         protected Record(Timestamp dateTime, Double value, int qualityCode) {
             this.dateTime = dateTime;
@@ -236,33 +280,31 @@ public class TimeSeries extends CwmsDTOPaginated {
         }
 
         @Override
-        public boolean equals(Object o)
-        {
-            if(this == o)
-            {
+        public boolean equals(Object o) {
+            if (this == o) {
                 return true;
             }
-            if(o == null || getClass() != o.getClass())
-            {
+            if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
             final Record record = (Record) o;
 
-            if(getQualityCode() != record.getQualityCode())
-            {
+            if (getQualityCode() != record.getQualityCode()) {
                 return false;
             }
-            if(getDateTime() != null ? !getDateTime().equals(record.getDateTime()) : record.getDateTime() != null)
-            {
+            if (getDateTime() != null
+                    ? !getDateTime().equals(record.getDateTime())
+                    : record.getDateTime() != null) {
                 return false;
             }
-            return getValue() != null ? getValue().equals(record.getValue()) : record.getValue() == null;
+            return getValue() != null
+                    ? getValue().equals(record.getValue())
+                    : record.getValue() == null;
         }
 
         @Override
-        public int hashCode()
-        {
+        public int hashCode() {
             int result = getDateTime() != null ? getDateTime().hashCode() : 0;
             result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
             result = 31 * result + getQualityCode();
@@ -270,9 +312,11 @@ public class TimeSeries extends CwmsDTOPaginated {
         }
 
         @Override
-        public String toString()
-        {
-            return "Record{" + "dateTime=" + dateTime + ", value=" + value + ", qualityCode=" + qualityCode + '}';
+        public String toString() {
+            return "Record{"
+                         + "dateTime=" + dateTime
+                         + ", value=" + value
+                         + ", qualityCode=" + qualityCode + '}';
         }
     }
 
@@ -283,12 +327,15 @@ public class TimeSeries extends CwmsDTOPaginated {
         public final Class<?> datatype;
 
         // JAXB seems to need a default ctor
-        private Column(){
+        @SuppressWarnings("unused")
+        private Column() {
             this(null, 0,null);
         }
 
         @JsonCreator
-        protected Column(@JsonProperty("name") String name, @JsonProperty("ordinal") int number, @JsonProperty("datatype") Class<?> datatype) {
+        protected Column(@JsonProperty("name") String name,
+                         @JsonProperty("ordinal") int number,
+                         @JsonProperty("datatype") Class<?> datatype) {
             this.name = name;
             this.ordinal = number;
             this.datatype = datatype;

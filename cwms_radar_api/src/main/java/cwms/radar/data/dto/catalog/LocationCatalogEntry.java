@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.*;
 
-public class LocationCatalogEntry extends CatalogEntry{
+public class LocationCatalogEntry extends CatalogEntry {
     private String name;
     private String nearestCity;
     private String publicName;
@@ -28,12 +28,41 @@ public class LocationCatalogEntry extends CatalogEntry{
     private String boundingOffice;
     private String mapLabel;
     private boolean active;
-    @XmlElementWrapper(name="aliases")
-    @XmlElement(name="alias")
+    @XmlElementWrapper(name = "aliases")
+    @XmlElement(name = "alias")
     private List<LocationAlias> aliases;
 
-    private LocationCatalogEntry(){ super(null);}
+    private LocationCatalogEntry() {
+        super(null);
+    }
 
+    /**
+     * Create a new entry for the catalog.
+     * @param office The office that owns this location
+     * @param name Location name (includes the CWMS Base and sub location)
+     * @param nearestCity closest city to this location
+     * @param publicName Friendly name to render in certain interfaces
+     * @param longName A full name when neccessary. Often much more descriptive
+     * @param description Description of the purpose or conditions
+     * @param kind representation of purpose
+     * @param type representation of purpose
+     * @param timeZone timeZone in which the station is located. (used by Local Regular Timeseries.)
+     * @param latitude location
+     * @param longitude location
+     * @param publishedLatitude location published
+     * @param publishedLongitude location published
+     * @param horizontalDatum reference information for the lat/long
+     * @param elevation height above vertical datum reference
+     * @param unit units of the elevation (usually ft or m)
+     * @param verticalDatum reference information for the location elevation
+     * @param nation What nation this location resides in (usually US, Canada, or Mexico)
+     * @param state State/Province that this location is in
+     * @param county the count the location is in
+     * @param boundingOffice What USACE district has primary responsibility or need.
+     * @param mapLabel name to use for map based interfaces
+     * @param active is data actively collected for this site?
+     * @param aliases additional names that can be used in all other interfaces
+     */
     public LocationCatalogEntry(String office,
                                 String name,
                                 String nearestCity,
@@ -59,7 +88,8 @@ public class LocationCatalogEntry extends CatalogEntry{
                                 boolean active,
                                 List<LocationAlias> aliases) {
         super(office);
-        Objects.requireNonNull(aliases, "aliases provided must be an actual list, empty list is okay");
+        Objects.requireNonNull(aliases,
+                              "aliases provided must be an actual list, empty list is okay");
         this.name = name;
         this.nearestCity = nearestCity;
         this.publicName = publicName;
@@ -174,19 +204,23 @@ public class LocationCatalogEntry extends CatalogEntry{
     }
 
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getNearestCity(){
+    public String getNearestCity() {
         return nearestCity;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(getOffice()).append("/").append(name).append(";nearestCity=").append(nearestCity);
-        for( LocationAlias alias: aliases){
+        builder.append(getOffice())
+               .append("/")
+               .append(name)
+               .append(";nearestCity=")
+               .append(nearestCity);
+        for (LocationAlias alias: aliases) {
             builder.append(";alias=").append(alias.toString());
         }
         return builder.toString();

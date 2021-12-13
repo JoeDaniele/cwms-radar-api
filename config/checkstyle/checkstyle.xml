@@ -55,7 +55,7 @@
             <property name="allowNonPrintableEscapes" value="true"/>
         </module>
         <module name="AvoidStarImport">
-            <property name="excludes" value="org.junit.jupiter.api.Assertions,org.hamcrest.Matchers,io.restassured.RestAssured,io.restassured.matcher.RestAssuredMatchers"/>
+            <property name="excludes" value="javax.xml.bind.annotation,org.junit.jupiter.api.Assertions,org.hamcrest.Matchers,io.restassured.RestAssured,io.restassured.matcher.RestAssuredMatchers"/>
         </module>
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap"/>
@@ -199,7 +199,7 @@
         <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="true"/>
             <property name="allowedAbbreviationLength" value="1"/>
-            <property name="allowedAbbreviations" value="UTC,JNDI,XML,JSON,SPK,SPA,SPN,SPL,NWO,NWP,NWW,NWS,NWK" />
+            <property name="allowedAbbreviations" value="DTO,PGJSON,UTC,JNDI,XML,JSON,SPK,SPA,SPN,SPL,NWO,NWP,NWW,NWS,NWK" />
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
