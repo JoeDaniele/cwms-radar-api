@@ -47,6 +47,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 
+import static org.mockito.ArgumentMatchers.isNotNull;
+
 public class TimeSeriesControllerTest extends ControllerTest {
 
     @Test
@@ -61,7 +63,7 @@ public class TimeSeriesControllerTest extends ControllerTest {
         when(
                 dao.getTimeseries(eq(""), eq(500), eq(tsId), eq(officeId), eq("EN"),
                         isNull(),
-                        isNull(), isNull(), isNull())).thenReturn(expected);
+                        isNotNull(), isNotNull(), isNotNull())).thenReturn(expected);
 
 
         // build mock request and response
@@ -106,9 +108,9 @@ public class TimeSeriesControllerTest extends ControllerTest {
         controller.getAll(ctx);
 
         // Check that the controller accessed our mock dao in the expected way
-        verify(dao, times(1))
-                .getTimeseries(eq(""), eq(500), eq(tsId), eq(officeId), eq("EN"),
-                        isNull(), isNull(), isNull(), isNull());
+        verify(dao, times(1)).
+                getTimeseries(eq(""), eq(500), eq(tsId), eq(officeId), eq("EN"),
+                        isNull(), isNotNull(), isNotNull(), isNotNull());
 
         // Make sure controller thought it was happy
         verify(response).setStatus(200);
