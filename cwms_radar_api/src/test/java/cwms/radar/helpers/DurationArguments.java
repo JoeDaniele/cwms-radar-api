@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
-public class DurationArguments implements ArgumentsProvider{
+public class DurationArguments implements ArgumentsProvider {
 
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
@@ -20,9 +20,12 @@ public class DurationArguments implements ArgumentsProvider{
         ZonedDateTime nowDstBoundaryNov = ZonedDateTime.of(2022,11,6,0,0,0,0,pacific);
 
         return Stream.of(
-            Arguments.of(nowNormalDay,"P-1D","UTC",ZonedDateTime.of(2022,1,5,0,0,0,0,utc)),
-            Arguments.of(nowDstBoundaryMarch,"P-1D","US/Pacific",ZonedDateTime.of(2022,3,13,8,0,0,0,utc)),
-            Arguments.of(nowDstBoundaryNov,"P-1D","US/Pacific",ZonedDateTime.of(2022,11,5,7,0,0,0,utc))
+            Arguments.of(nowNormalDay,"P-1D","UTC",
+                         ZonedDateTime.of(2022,1,5,0,0,0,0,utc)),
+            Arguments.of(nowDstBoundaryMarch,"P-1D","US/Pacific",
+                         ZonedDateTime.of(2022,3,13,8,0,0,0,utc)),
+            Arguments.of(nowDstBoundaryNov,"P-1D","US/Pacific",
+                         ZonedDateTime.of(2022,11,5,7,0,0,0,utc))
         );
     }
 

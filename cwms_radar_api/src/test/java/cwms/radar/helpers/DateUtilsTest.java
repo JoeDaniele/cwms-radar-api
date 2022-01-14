@@ -13,25 +13,30 @@ public class DateUtilsTest {
 
     @ParameterizedTest
     @ArgumentsSource(FullDatesArguments.class)
-    public void test_iso_dates_from_user( String inputDate, ZoneId tz, ZonedDateTime expected){
-        ZonedDateTime result = DateUtils.parseUserDate(inputDate, tz,null); // now not used in this case force npe if
-                                                                            // someone accidentally sets that up.
+    public void test_iso_dates_from_user(String inputDate, ZoneId tz, ZonedDateTime expected) {
+        // now not used in this case force npe if
+        // someone accidentally sets that up.
+        ZonedDateTime result = DateUtils.parseUserDate(inputDate, tz,null);
         assertTrue(result.isEqual(expected), "Provided date input not correctly matched");
     }
 
 
     @ParameterizedTest
     @ArgumentsSource(PeriodArguments.class)
-    public void test_iso_period_from_user(ZonedDateTime now, String inputPeriod, ZoneId tz, ZonedDateTime expected){
+    public void test_iso_period_from_user(ZonedDateTime now, String inputPeriod,
+                                          ZoneId tz, ZonedDateTime expected) {
         ZonedDateTime result = DateUtils.parseUserDate(inputPeriod, tz, now);
-        assertTrue(result.isEqual(expected), "User provided input not correctly matched to expected result");
+        assertTrue(result.isEqual(expected),
+                   "User provided input not correctly matched to expected result");
     }
 
     @ParameterizedTest
     @ArgumentsSource(DurationArguments.class)
-    public void test_iso_duration_from_user(ZonedDateTime now, String inputPeriod, ZoneId tz, ZonedDateTime expected){
+    public void test_iso_duration_from_user(ZonedDateTime now, String inputPeriod,
+                                            ZoneId tz, ZonedDateTime expected) {
         ZonedDateTime result = DateUtils.parseUserDate(inputPeriod, tz, now);
-        assertTrue(result.isEqual(expected), "User provided input not correctly matched to expected result");
+        assertTrue(result.isEqual(expected),
+                   "User provided input not correctly matched to expected result");
     }
 
 }
