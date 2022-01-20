@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public final class ResourceHelper {
     private static final Logger logger = Logger.getLogger(ResourceHelper.class.getName());
+
     /**
      * Returns resource as a string, null if resource can't be found.
      * @param resource The path to the resource
@@ -26,7 +27,7 @@ public final class ResourceHelper {
         return null;
     }
 
-        /**
+    /**
      * Returns resource as a string, null if resource can't be found.
      * @param resource The path to the resource
      * @return The contents of the resource

@@ -80,42 +80,58 @@ public abstract class CwmsDTOPaginated implements CwmsDTO {
     }
 
     /**
-     * @return String return the page
+     * Return the page.
+     * @return String
      */
     public String getPage() {
         return page;
     }
 
+
     /**
-     * @return String return the nextPage
+     * Return the nextPage.
+     * @return String
      */
     public String getNextPage() {
         return nextPage;
     }
 
     /**
+     * Total Number of elements the of the dataset.
      * @return Integer return the total, null if not supported or unknown
      */
     public Integer getTotal() {
         return total;
     }
 
+
     /**
-     *
+     * Number of elements per page.
      * @return int return the elements per page
      */
     public int getPageSize() {
         return pageSize;
     }
 
+    /**
+     * Use default separate to decode opaque cursor to constituent parts.
+     * @param cursor the based64 encoded cursor
+     * @return array of cursor elements; defined by endpoints
+     */
     public static String[] decodeCursor(String cursor) {
         return decodeCursor(cursor, CwmsDTOPaginated.delimiter);
     }
 
+    /**
+     * Decode an opaque cursor into its constituent parts.
+     * @param cursor the based64 encoded cursor
+     * @param delimiter Separator used for this cursor
+     * @return array of cursor elements; defined by endpoints
+     */
     public static String[] decodeCursor(String cursor, String delimiter) {
         if (cursor != null && !cursor.isEmpty()) {
-            String _cursor = new String(decoder.decode(cursor));
-            return _cursor.split(Pattern.quote(delimiter));
+            String tmpCursor = new String(decoder.decode(cursor));
+            return tmpCursor.split(Pattern.quote(delimiter));
         }
 
         // Return empty array

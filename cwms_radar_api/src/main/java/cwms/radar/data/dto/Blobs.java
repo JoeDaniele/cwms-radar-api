@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Blobs extends CwmsDTOPaginated {
     @XmlElementWrapper
-    @XmlElement(name="blob")
+    @XmlElement(name = "blob")
     // Use the array shape to optimize data transfer to client
     //@JsonFormat(shape=JsonFormat.Shape.ARRAY)
     @Schema(implementation = Blob.class, description = "List of retrieved blobs")
@@ -41,14 +41,20 @@ public class Blobs extends CwmsDTOPaginated {
 
     public static class Builder {
         private Blobs workingBlobs = null;
-        public Builder( String cursor, int pageSize, int total){
+
+        public Builder(String cursor, int pageSize, int total) {
             workingBlobs = new Blobs(cursor, pageSize, total);
         }
 
+        /**
+         * Finalize the blob list for return.
+         * @return a valid blob DTO.
+         */
         public Blobs build() {
-            if( this.workingBlobs.blobs.size() == this.workingBlobs.pageSize){
+            if (this.workingBlobs.blobs.size() == this.workingBlobs.pageSize) {
                 this.workingBlobs.nextPage = encodeCursor(
-                            this.workingBlobs.blobs.get(this.workingBlobs.blobs.size()-1).toString().toUpperCase(),
+                            this.workingBlobs.blobs.get(
+                                this.workingBlobs.blobs.size() - 1).toString().toUpperCase(),
                             this.workingBlobs.pageSize,
                             this.workingBlobs.total);
             } else {
@@ -64,7 +70,7 @@ public class Blobs extends CwmsDTOPaginated {
             return this;
         }
 
-        public Builder addAll(List<Blob> toAdd ) {
+        public Builder addAll(List<Blob> toAdd) {
             this.workingBlobs.blobs.addAll(toAdd);
             return this;
         }

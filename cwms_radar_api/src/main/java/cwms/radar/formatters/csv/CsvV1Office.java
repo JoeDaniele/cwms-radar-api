@@ -13,8 +13,8 @@ import java.util.List;
     description = "Single Office or List of Offices in comma separated format",
     example =
     "#Office Name,Long Name,Office Type,Reports To Office\r\n"
-    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"
-    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n"
+    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity,ERD\r\n"
+    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity,ERD\r\n"
     + "NAB,Baltimore District,District,NAD\r\n"
     + "NAD,North Atlantic Division,Division Headquarters,HQ"
 )
