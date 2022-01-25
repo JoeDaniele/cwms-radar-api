@@ -1,15 +1,17 @@
 package cwms.radar.data.dao;
 
+import cwms.radar.data.dto.AssignedTimeSeries;
+import cwms.radar.data.dto.TimeSeriesCategory;
+import cwms.radar.data.dto.TimeSeriesGroup;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import cwms.radar.data.dto.AssignedTimeSeries;
-import cwms.radar.data.dto.TimeSeriesCategory;
-import cwms.radar.data.dto.TimeSeriesGroup;
 import kotlin.Pair;
+
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -21,18 +23,20 @@ import org.jooq.SelectOrderByStep;
 import usace.cwms.db.jooq.codegen.tables.AV_TS_CAT_GRP;
 import usace.cwms.db.jooq.codegen.tables.AV_TS_GRP_ASSGN;
 
-public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup>
-{
-    public TimeSeriesGroupDao(DSLContext dsl)
-    {
+public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup> {
+    public TimeSeriesGroupDao(DSLContext dsl) {
         super(dsl);
     }
 
-    public List<TimeSeriesGroup> getTimeSeriesGroups()
-    {
+    public List<TimeSeriesGroup> getTimeSeriesGroups() {
         return getTimeSeriesGroups(null);
     }
 
+    /**
+     * Retrieve the timeseries group or groups requested.
+     * @param officeId Specific Office desired
+     * @return TS Group list
+     */
     public List<TimeSeriesGroup> getTimeSeriesGroups(String officeId) {
         Condition whereCond = null;
         if (officeId != null) {
@@ -40,6 +44,11 @@ public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup>
         }
 
         return getTimeSeriesGroupsWhere(whereCond);
+    }
+
+    public List<TimeSeriesGroup> getTimeSeriesGroups(String officeId, String categoryId,
+                                                     String groupId) {
+        return getTimeSeriesGroupsWhere(buildWhereCondition(officeId, categoryId, groupId));
     }
 
     @NotNull
@@ -54,7 +63,7 @@ public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup>
                 AssignedTimeSeries loc = buildAssignedTimeSeries(queryRecord);
 
                 return new Pair<>(group, loc);
-        };
+            };
 
         SelectOnConditionStep<?> selectOn = dsl.select(
                 catGrp.CAT_DB_OFFICE_ID, catGrp.TS_CATEGORY_ID, catGrp.TS_CATEGORY_DESC,
@@ -83,10 +92,9 @@ public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup>
         for (Pair<TimeSeriesGroup, AssignedTimeSeries> pair : assignments) {
             List<AssignedTimeSeries> list = map
                                             .computeIfAbsent(pair.component1(),
-                                                             k -> new ArrayList<>());
+                                                k -> new ArrayList<>());
             AssignedTimeSeries assignedTimeSeries = pair.component2();
-            if(assignedTimeSeries != null)
-            {
+            if (assignedTimeSeries != null) {
                 list.add(assignedTimeSeries);
             }
         }
@@ -137,11 +145,6 @@ public class TimeSeriesGroupDao extends JooqDao<TimeSeriesGroup>
         String catId = queryRecord.get(AV_TS_CAT_GRP.AV_TS_CAT_GRP.TS_CATEGORY_ID);
         String catDesc = queryRecord.get(AV_TS_CAT_GRP.AV_TS_CAT_GRP.TS_CATEGORY_DESC);
         return new TimeSeriesCategory(catOfficeId, catId, catDesc);
-    }
-
-    public List<TimeSeriesGroup> getTimeSeriesGroups(String officeId, String categoryId,
-                                                     String groupId) {
-        return getTimeSeriesGroupsWhere(buildWhereCondition(officeId, categoryId, groupId));
     }
 
     private Condition buildWhereCondition(String officeId, String categoryId, String groupId) {

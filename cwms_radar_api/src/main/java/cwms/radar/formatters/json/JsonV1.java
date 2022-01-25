@@ -63,6 +63,7 @@ public class JsonV1 implements OutputFormatter {
         this.om = om.copy();
         this.om.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
         this.om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        this.om.registerModule(new JavaTimeModule());
     }
 
     /**
@@ -151,10 +152,10 @@ public class JsonV1 implements OutputFormatter {
                 klassName = dao.getClass().getName();
             }
             throw new BadRequestResponse(
-                    String.format(
-                        "Format %s not implemented for data of class:%s",
-                        getContentType(),
-                        klassName));
+                    String.format("Format %s not implemented for data of class:%s",
+                    getContentType(),
+                    klassName
+            ));
         }
         return retval;
     }
@@ -182,10 +183,10 @@ public class JsonV1 implements OutputFormatter {
                     klassName = firstObj.getClass().getName();
                 }
                 throw new BadRequestResponse(
-                    String.format(
-                        "Format %s not implemented for data of class:%s",
-                        getContentType(),
-                        klassName));
+                    String.format("Format %s not implemented for data of class:%s",
+                    getContentType(),
+                    klassName
+                ));
             }
         }
         return retval;
