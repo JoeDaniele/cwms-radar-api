@@ -1,5 +1,10 @@
 package cwms.radar.data.dao;
 
+import static java.util.stream.Collectors.toList;
+
+import cwms.radar.data.dto.Pool;
+import cwms.radar.data.dto.Pools;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,9 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import cwms.radar.data.dto.Pool;
-import cwms.radar.data.dto.Pools;
 import org.jetbrains.annotations.NotNull;
+
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -24,207 +28,252 @@ import usace.cwms.db.jooq.codegen.packages.CWMS_POOL_PACKAGE;
 import usace.cwms.db.jooq.codegen.packages.cwms_pool.RETRIEVE_POOL;
 import usace.cwms.db.jooq.codegen.tables.AV_POOL;
 
-import static java.util.stream.Collectors.toList;
+public class PoolDao extends JooqDao<PoolType> {
+    private static Logger logger = Logger.getLogger(PoolDao.class.getName());
 
-public class PoolDao extends JooqDao<PoolType>
-{
-	private static Logger logger = Logger.getLogger(PoolDao.class.getName());
-
-	public PoolDao(DSLContext dsl)
-	{
-		super(dsl);
-	}
+    public PoolDao(DSLContext dsl) {
+        super(dsl);
+    }
 
 
-	public List<Pool> catalogPools(String projectIdMask, String poolNameMask,
-								   String bottomLevelMask, String topLevelMask, boolean includeExplicit,
-								   boolean includeImplicit, String officeIdMask)
-	{
-		AV_POOL view = AV_POOL.AV_POOL;
+    /**
+     * Retrieve a list of pools for multiple projects.
+     * @param projectIdMask project desired
+     * @param poolNameMask name of pools desired
+     * @param bottomLevelMask name of lower bounding elements
+     * @param topLevelMask name of upper bounding elements
+     * @param includeExplicit include specifically defined Pools
+     * @param includeImplicit include pools derived from other information
+     * @param officeIdMask owning office
+     * @return list of Pool objects.
+     */
+    public List<Pool> catalogPools(String projectIdMask, String poolNameMask,
+                                   String bottomLevelMask, String topLevelMask,
+                                   boolean includeExplicit, boolean includeImplicit,
+                                   String officeIdMask) {
+        AV_POOL view = AV_POOL.AV_POOL;
 
-		List<String> types = getTypes(includeExplicit, includeImplicit);
-		Condition condition = getCondition(projectIdMask, poolNameMask, bottomLevelMask, topLevelMask, officeIdMask, types);
+        List<String> types = getTypes(includeExplicit, includeImplicit);
+        Condition condition = getCondition(projectIdMask, poolNameMask,
+                                           bottomLevelMask, topLevelMask,
+                                           officeIdMask, types);
 
-		return dsl.select(DSL.asterisk()).from(view)
-				.where(condition)
-				.orderBy(view.DEFINITION_TYPE,
-					view.OFFICE_ID.upper(), view.PROJECT_ID.upper(), view.ATTRIBUTE, view.POOL_NAME.upper())
-				.stream()
-				.map(r -> toPool(r, true))
-				.collect(toList());
-	}
+        return dsl.select(DSL.asterisk()).from(view)
+                .where(condition)
+                .orderBy(view.DEFINITION_TYPE,
+                    view.OFFICE_ID.upper(),
+                    view.PROJECT_ID.upper(),
+                    view.ATTRIBUTE,
+                    view.POOL_NAME.upper())
+                .stream()
+                .map(r -> toPool(r, true))
+                .collect(toList());
+    }
 
-	@NotNull
-	private List<String> getTypes(boolean includeExplicit, boolean includeImplicit)
-	{
-		List<String> types = new ArrayList<>();
-		if (includeExplicit)
-		{
-			types.add("EXPLICIT");
-		}
+    @NotNull
+    private List<String> getTypes(boolean includeExplicit, boolean includeImplicit) {
+        List<String> types = new ArrayList<>();
+        if (includeExplicit) {
+            types.add("EXPLICIT");
+        }
 
-		if(includeImplicit)
-		{
-			types.add("IMPLICIT");
-		}
-		return types;
-	}
-
-
-
-	private Condition getCondition(String projectIdMask, String poolNameMask, String bottomLevelMask,
-								   String topLevelMask, String officeIdMask, List<String> types)
-	{
-		AV_POOL view = AV_POOL.AV_POOL;
-		Condition condition = view.DEFINITION_TYPE.in(types);
-
-		if(projectIdMask != null){
-			condition = condition.and(view.PROJECT_ID.upper().likeRegex(projectIdMask.toUpperCase()));
-		}
-
-		if(poolNameMask != null){
-			condition = condition.and(view.POOL_NAME.upper().likeRegex(poolNameMask.toUpperCase()));
-		}
-
-		if(bottomLevelMask != null){
-			condition = condition.and(view.BOTTOM_LEVEL.upper().likeRegex(bottomLevelMask.toUpperCase()));
-		}
-
-		if(topLevelMask != null){
-			condition = condition.and(view.TOP_LEVEL.upper().likeRegex(topLevelMask.toUpperCase()));
-		}
-
-		if(officeIdMask != null){
-			condition = condition.and(view.OFFICE_ID.upper().likeRegex(officeIdMask.toUpperCase()));
-		}
-		return condition;
-	}
+        if (includeImplicit) {
+            types.add("IMPLICIT");
+        }
+        return types;
+    }
 
 
-	private List<Pool> catalogPoolsInternal( boolean includeExplicit, boolean includeImplicit,
-												String projectIdMask, String poolNameMask, String bottomLevelMask,
-												String topLevelMask, String officeIdMask)
-	{
-		String includeExplicitStr = OracleTypeMap.formatBool(includeExplicit);
-		String includeImplicitStr = OracleTypeMap.formatBool(includeImplicit);
-		Result<Record> records = CWMS_POOL_PACKAGE.call_CAT_POOLS(dsl.configuration(), projectIdMask,
-				poolNameMask, bottomLevelMask, topLevelMask, includeExplicitStr, includeImplicitStr,
-				officeIdMask);
+    @SuppressWarnings("checkstyle:linelength")
+    private Condition getCondition(String projectIdMask, String poolNameMask,
+                                   String bottomLevelMask, String topLevelMask,
+                                   String officeIdMask, List<String> types) {
+        AV_POOL view = AV_POOL.AV_POOL;
+        Condition condition = view.DEFINITION_TYPE.in(types);
 
-		return records.stream().map(r->toPool(r, includeImplicit))
-				.collect(Collectors.toList());
-	}
+        if (projectIdMask != null) {
+            condition = condition.and(view.PROJECT_ID.upper().likeRegex(projectIdMask.toUpperCase()));
+        }
 
+        if (poolNameMask != null) {
+            condition = condition.and(view.POOL_NAME.upper().likeRegex(poolNameMask.toUpperCase()));
+        }
 
-	@NotNull
-	private static Pool toPool(Record catRecord, boolean isImplicit)
-	{
-		String poolId = catRecord.get("POOL_NAME", String.class);
-		String projectId = catRecord.get("PROJECT_ID", String.class);
-		String officeId = catRecord.get("OFFICE_ID", String.class);
-		String bottomLevelId = catRecord.get("BOTTOM_LEVEL", String.class);
-		String topLevelId = catRecord.get("TOP_LEVEL", String.class);
+        if (bottomLevelMask != null) {
+            condition = condition.and(view.BOTTOM_LEVEL.upper().likeRegex(bottomLevelMask.toUpperCase()));
+        }
 
-		// These fields weren't in PoolType, they appear to be
-		// hard-wired to null in the pl/sql for implicit pools, not sure about explicit.
-		Number attribute = catRecord.get("ATTRIBUTE", Number.class);
-		String description = catRecord.get("DESCRIPTION", String.class);
+        if (topLevelMask != null) {
+            condition = condition.and(view.TOP_LEVEL.upper().likeRegex(topLevelMask.toUpperCase()));
+        }
 
-		String clobText = catRecord.get("CLOB_TEXT", String.class);
-
-		PoolNameType name = new PoolNameType(poolId, officeId);
-		Pool.Builder b = Pool.Builder.newInstance();
-		b.withPoolName(name);
-		b.withProjectId(projectId);
-		b.withBottomLevelId(bottomLevelId);
-		b.withTopLevelId(topLevelId);
-		b.withImplicit(isImplicit);
-		b.withAttribute(attribute);
-		b.withDescription( description);
-		b.withClobText(clobText);
-		return b.build();
-	}
+        if (officeIdMask != null) {
+            condition = condition.and(view.OFFICE_ID.upper().likeRegex(officeIdMask.toUpperCase()));
+        }
+        return condition;
+    }
 
 
-	public Pool retrievePool( String projectId, String poolName, String officeId)
-	{
-		RETRIEVE_POOL pool = CWMS_POOL_PACKAGE.call_RETRIEVE_POOL(dsl.configuration(), projectId, poolName,	officeId);
+    @SuppressWarnings("checkstyle:linelength")
+    private List<Pool> catalogPoolsInternal(boolean includeExplicit, boolean includeImplicit,
+                                            String projectIdMask, String poolNameMask,
+                                            String bottomLevelMask,
+                                            String topLevelMask, String officeIdMask) {
+        String includeExplicitStr = OracleTypeMap.formatBool(includeExplicit);
+        String includeImplicitStr = OracleTypeMap.formatBool(includeImplicit);
+        Result<Record> records = CWMS_POOL_PACKAGE.call_CAT_POOLS(dsl.configuration(), projectIdMask,
+                poolNameMask, bottomLevelMask, topLevelMask, includeExplicitStr, includeImplicitStr,
+                officeIdMask);
 
-		Pool.Builder b = Pool.Builder.newInstance();
-		b.withPoolName(new PoolNameType(poolName, officeId));
-		b.withProjectId(projectId);
-		b.withBottomLevelId(pool.getP_BOTTOM_LEVEL_ID());
-		b.withTopLevelId(pool.getP_TOP_LEVEL_ID());
-		b.withImplicit(false);
+        return records.stream().map(r -> toPool(r, includeImplicit))
+                .collect(Collectors.toList());
+    }
 
-		return b.build();
-	}
 
-	public Pool retrievePoolFromCatalog(String projectId, String poolName,
-										String bottomMask, String topMask, boolean includeExplicit,
-										boolean includeImplicit, String officeIdMask)
-	{
-		Pool pool = null;
+    @NotNull
+    private static Pool toPool(Record catRecord, boolean isImplicit) {
+        String poolId = catRecord.get("POOL_NAME", String.class);
+        String projectId = catRecord.get("PROJECT_ID", String.class);
+        String officeId = catRecord.get("OFFICE_ID", String.class);
+        String bottomLevelId = catRecord.get("BOTTOM_LEVEL", String.class);
+        String topLevelId = catRecord.get("TOP_LEVEL", String.class);
 
-		List<Pool> pools = catalogPools(projectId, poolName, bottomMask, topMask, includeExplicit, includeImplicit, officeIdMask);
-		if(pools != null && !pools.isEmpty())
-		{
-			if(pools.size() == 1)
-			{
-				pool = pools.get(0);
-			} else {
-				throw new TooManyRowsException(String.format(
-						"PoolController.getOne is expected to be called with arguments that return a single unique pool. " +
-								"Arguments:[projectId:%s poolId:%s, bottomMask:%s, topMask:%s, implicit:%b, " +
-								"explicit:%b, office:%s] returned the following %d pools:%s",
-						projectId, poolName, bottomMask, topMask, includeImplicit, includeExplicit, officeIdMask, pools.size(), pools));
-			}
-		}
-		return pool;
-	}
+        // These fields weren't in PoolType, they appear to be
+        // hard-wired to null in the pl/sql for implicit pools, not sure about explicit.
+        Number attribute = catRecord.get("ATTRIBUTE", Number.class);
+        String description = catRecord.get("DESCRIPTION", String.class);
 
-	public Pools retrievePools(String cursor, int pageSize,
-							   String projectIdMask, String poolNameMask,
-							   String bottomLevelMask, String topLevelMask, boolean includeExplicit,
-							   boolean includeImplicit, String officeIdMask){
-		Integer total = null;
-		int offset = 0;
+        String clobText = catRecord.get("CLOB_TEXT", String.class);
 
-		AV_POOL view = AV_POOL.AV_POOL;
+        PoolNameType name = new PoolNameType(poolId, officeId);
+        Pool.Builder b = Pool.Builder.newInstance();
+        b.withPoolName(name);
+        b.withProjectId(projectId);
+        b.withBottomLevelId(bottomLevelId);
+        b.withTopLevelId(topLevelId);
+        b.withImplicit(isImplicit);
+        b.withAttribute(attribute);
+        b.withDescription(description);
+        b.withClobText(clobText);
+        return b.build();
+    }
 
-		if(cursor != null && !cursor.isEmpty())
-		{
-			String[] parts = Pools.decodeCursor(cursor);
+    /**
+     * Retireve a specific pool for a project.
+     * @param projectId Project/Dam desired.
+     * @param poolName pool desired.
+     * @param officeId owning office.
+     * @return The pool requested.
+     */
+    public Pool retrievePool(String projectId, String poolName, String officeId) {
+        RETRIEVE_POOL pool = CWMS_POOL_PACKAGE.call_RETRIEVE_POOL(dsl.configuration(),
+                                                                  projectId,
+                                                                  poolName,
+                                                                  officeId);
 
-			logger.info("decoded cursor: " + Arrays.toString(parts));
+        Pool.Builder b = Pool.Builder.newInstance();
+        b.withPoolName(new PoolNameType(poolName, officeId));
+        b.withProjectId(projectId);
+        b.withBottomLevelId(pool.getP_BOTTOM_LEVEL_ID());
+        b.withTopLevelId(pool.getP_TOP_LEVEL_ID());
+        b.withImplicit(false);
 
-			if(parts.length > 2) {
-				offset = Integer.parseInt(parts[0]);
-				if(!"null".equals(parts[1])){
-					try {
-						total = Integer.valueOf(parts[1]);
-					} catch(NumberFormatException e){
-						logger.log(Level.INFO, "Could not parse " + parts[1]);
-					}
-				}
-				pageSize = Integer.parseInt(parts[2]); // Why are we taking pageSize as an arg and also pulling it from cursor?
-			}
-		}
+        return b.build();
+    }
 
-		List<String> types = getTypes(includeExplicit, includeImplicit);
-		Condition condition = getCondition(projectIdMask, poolNameMask, bottomLevelMask, topLevelMask, officeIdMask, types);
+    /**
+     * Retrieve a specific pool.
+     * @param projectId project name
+     * @param poolName name of pool
+     * @param bottomMask lower bounding elements, can include multiple
+     * @param topMask upper bounding elements, can include multiple
+     * @param includeExplicit include only those pools there were specifically defined.
+     * @param includeImplicit include pools that may be derived automatically from other pools.
+     * @param officeIdMask owning office.
+     * @return Pool object
+     */
+    @SuppressWarnings("checkstyle:linelength")
+    public Pool retrievePoolFromCatalog(String projectId, String poolName,
+                                        String bottomMask, String topMask, boolean includeExplicit,
+                                        boolean includeImplicit, String officeIdMask) {
+        Pool pool = null;
 
-		List<Pool> pools = dsl.select(DSL.asterisk()).from(view)
-				.where(condition)
-				.orderBy(view.DEFINITION_TYPE,
-						view.OFFICE_ID.upper(), view.PROJECT_ID.upper(), view.ATTRIBUTE, view.POOL_NAME.upper())
-				.offset(offset)
-				.limit(pageSize)
-				.stream().map(r -> toPool(r, true)).collect(toList());
+        List<Pool> pools = catalogPools(projectId, poolName, bottomMask, topMask, includeExplicit, includeImplicit, officeIdMask);
+        if (pools != null && !pools.isEmpty()) {
+            if (pools.size() == 1) {
+                pool = pools.get(0);
+            } else {
+                throw new TooManyRowsException(String.format(
+                        "PoolController.getOne is expected to be called with arguments that return a single unique pool. "
+                         + "Arguments:[projectId:%s poolId:%s, bottomMask:%s, topMask:%s, implicit:%b, "
+                         + "explicit:%b, office:%s] returned the following %d pools:%s",
+                        projectId, poolName, bottomMask, topMask, includeImplicit, includeExplicit, officeIdMask, pools.size(), pools));
+            }
+        }
+        return pool;
+    }
 
-		Pools.Builder builder = new Pools.Builder(offset, pageSize, total);
-		builder.addAll(pools);
-		return builder.build();
-	}
+    /**
+     * Retrieve list of defined "pools" for a given project.
+     * @param cursor page were on
+     * @param pageSize how many elements per page
+     * @param projectIdMask project id, can match multiple
+     * @param poolNameMask pool names, can match multiple
+     * @param bottomLevelMask lower bounding elements, can match multiple
+     * @param topLevelMask upper bounding elements, can match multiple
+     * @param includeExplicit include defined pools
+     * @param includeImplicit include pool derived from other pools
+     * @param officeIdMask owning office
+     * @return Pool object used for further formatting.
+     */
+    public Pools retrievePools(String cursor, int pageSize,
+                               String projectIdMask, String poolNameMask,
+                               String bottomLevelMask, String topLevelMask, boolean includeExplicit,
+                               boolean includeImplicit, String officeIdMask) {
+        Integer total = null;
+        int offset = 0;
+
+        AV_POOL view = AV_POOL.AV_POOL;
+
+        if (cursor != null && !cursor.isEmpty()) {
+            String[] parts = Pools.decodeCursor(cursor);
+
+            logger.info("decoded cursor: " + Arrays.toString(parts));
+
+            if (parts.length > 2) {
+                offset = Integer.parseInt(parts[0]);
+                if (!"null".equals(parts[1])) {
+                    try {
+                        total = Integer.valueOf(parts[1]);
+                    } catch (NumberFormatException e) {
+                        logger.log(Level.INFO, "Could not parse " + parts[1]);
+                    }
+                }
+                // Why are we taking pageSize as an arg and also pulling it from cursor?
+                // RE: respect the setting on the first request, on the 2nd we use the cursor value
+                // allowing the user to be a bit lazy with updating the URL on the 2nd request.
+                pageSize = Integer.parseInt(parts[2]);
+            }
+        }
+
+        List<String> types = getTypes(includeExplicit, includeImplicit);
+        Condition condition = getCondition(projectIdMask, poolNameMask, bottomLevelMask,
+                                           topLevelMask, officeIdMask, types);
+
+        List<Pool> pools = dsl.select(DSL.asterisk()).from(view)
+                .where(condition)
+                .orderBy(view.DEFINITION_TYPE,
+                        view.OFFICE_ID.upper(),
+                        view.PROJECT_ID.upper(),
+                        view.ATTRIBUTE,
+                        view.POOL_NAME.upper())
+                .offset(offset)
+                .limit(pageSize)
+                .stream().map(r -> toPool(r, true)).collect(toList());
+
+        Pools.Builder builder = new Pools.Builder(offset, pageSize, total);
+        builder.addAll(pools);
+        return builder.build();
+    }
 
 }
