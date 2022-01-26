@@ -152,10 +152,10 @@ public class JsonV1 implements OutputFormatter {
                 klassName = dao.getClass().getName();
             }
             throw new BadRequestResponse(
-                    String.format("Format %s not implemented for data of class:%s",
-                    getContentType(),
-                    klassName
-            ));
+                    String.format(
+                        "Format %s not implemented for data of class:%s",
+                        getContentType(),
+                        klassName));
         }
         return retval;
     }
@@ -183,10 +183,10 @@ public class JsonV1 implements OutputFormatter {
                     klassName = firstObj.getClass().getName();
                 }
                 throw new BadRequestResponse(
-                    String.format("Format %s not implemented for data of class:%s",
-                    getContentType(),
-                    klassName
-                ));
+                    String.format(
+                        "Format %s not implemented for data of class:%s",
+                        getContentType(),
+                        klassName));
             }
         }
         return retval;
