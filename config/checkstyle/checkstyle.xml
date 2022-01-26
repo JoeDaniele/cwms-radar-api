@@ -55,7 +55,7 @@
             <property name="allowNonPrintableEscapes" value="true"/>
         </module>
         <module name="AvoidStarImport">
-            <property name="excludes" value="javax.xml.bind.annotation,org.junit.jupiter.api.Assertions,org.hamcrest.Matchers,io.restassured.RestAssured,io.restassured.matcher.RestAssuredMatchers"/>
+            <property name="excludes" value="javax.xml.bind.annotation,org.junit.jupiter.api.Assertions,org.hamcrest.Matchers,io.restassured.RestAssured,io.restassured.matcher.RestAssuredMatchers,org.jooq.impl.DSL"/>
         </module>
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap"/>

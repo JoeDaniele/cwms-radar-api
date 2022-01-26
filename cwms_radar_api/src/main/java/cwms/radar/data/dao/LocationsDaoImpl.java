@@ -18,7 +18,13 @@ import cwms.radar.data.dto.catalog.LocationCatalogEntry;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -52,7 +58,7 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
      * @param format json,xml,tab,csv
      * @param units units to output elevation data and the like in.
      * @param datum reference point for elevation data, e.g. NAVD88 NGVD29
-     * @param officeId
+     * @param officeId owning office
      */
     @Override
     public String getLocations(String names,String format, String units,
@@ -65,7 +71,7 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
     /**
      * Retrieve a single location from the database.
      * @param locationName location desired
-     * @param unitystem units for data such as elevation
+     * @param unitSystem units for data such as elevation
      * @param officeId owning office
      * @return location object with all metadata
      */
@@ -128,7 +134,7 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
     /**
      * Remove a location from the database. May also remove associated timeseries.
      * @param locationName location to remove
-     * @param office owning office
+     * @param officeId owning office
      * @throws IOException error with database operation
      */
     @Override
@@ -138,14 +144,14 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
                 CwmsDbLoc locJooq = CwmsDbServiceLookup.buildCwmsDb(CwmsDbLoc.class, c);
                 locJooq.delete(c, officeId, locationName);
             });
-        } catch(DataAccessException ex) {
+        } catch (DataAccessException ex) {
             // TODO: actually log the info or at least add to the io exception
             throw new IOException(ex);
         }
     }
 
     /**
-     * Given a Location DTO object, save data to the database
+     * Given a Location DTO object, save data to the database.
      * @param location location data
      * @throws IOException error storing data to the database
      */
@@ -285,7 +291,7 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
 
         feature.setGeometry(new Point(longitude, latitude));
 
-        Map<String, Object> properties = new LinkedHashMap<>();
+
         Map<String, Object> recordMap = avLocRecord.intoMap();
         List<String> keysWithNullValue =
                 recordMap.entrySet().stream().filter(e -> e.getValue() == null)
@@ -294,7 +300,10 @@ public class LocationsDaoImpl extends JooqDao<Location> implements LocationsDao 
         recordMap.remove(AV_LOC.LATITUDE.getName());
         recordMap.remove(AV_LOC.LONGITUDE.getName());
         recordMap.remove(AV_LOC.PUBLIC_NAME.getName());
+
+        Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("avLoc", recordMap);
+
         feature.setProperties(properties);
 
         return feature;

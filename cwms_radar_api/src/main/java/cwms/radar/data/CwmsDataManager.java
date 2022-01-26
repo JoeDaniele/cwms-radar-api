@@ -1,10 +1,11 @@
 package cwms.radar.data;
 
+import io.javalin.http.Context;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import io.javalin.http.Context;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -20,19 +21,23 @@ public class CwmsDataManager implements AutoCloseable {
     private Connection conn;
     private DSLContext dsl;
 
-    public CwmsDataManager(Context ctx) throws SQLException{
+    public CwmsDataManager(Context ctx) throws SQLException {
         this(ctx.attribute("database"), ctx.attribute("office_id"));
     }
 
-    public CwmsDataManager(Connection conn, String officeId) throws SQLException{
+    /**
+     * Setup connection and DSLContext with a given officeId.
+     * @param conn open jdbc connection
+     * @param officeId desired office
+     */
+    public CwmsDataManager(Connection conn, String officeId) throws SQLException {
         this.conn = conn;
         dsl = DSL.using(conn, SQLDialect.ORACLE11G);
 
         setOfficeId(officeId);
     }
 
-    private void setOfficeId(String officeId)
-    {
+    private void setOfficeId(String officeId) {
         CWMS_ENV_PACKAGE.call_SET_SESSION_OFFICE_ID(dsl.configuration(), officeId);
     }
 
@@ -42,16 +47,16 @@ public class CwmsDataManager implements AutoCloseable {
     }
 
 
-	public String getUnits(String format) {
+    public String getUnits(String format) {
         return CWMS_CAT_PACKAGE.call_RETRIEVE_UNITS_F(dsl.configuration(), format);
-	}
+    }
 
-	public String getParameters(String format){
+    public String getParameters(String format) {
         return CWMS_CAT_PACKAGE.call_RETRIEVE_PARAMETERS_F(dsl.configuration(), format);
     }
 
-	public String getTimeZones(String format) {
-            return CWMS_CAT_PACKAGE.call_RETRIEVE_TIME_ZONES_F(dsl.configuration(), format);
+    public String getTimeZones(String format) {
+        return CWMS_CAT_PACKAGE.call_RETRIEVE_TIME_ZONES_F(dsl.configuration(), format);
     }
 
 

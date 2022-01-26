@@ -295,37 +295,38 @@ public class BasinConnectivityStream
         streamNodes.remove(node);
     }
 
-    private void insertNode(BasinConnectivityNode node)
-    {
-        int index = Collections.binarySearch(streamNodes, node, new BasinConnectivityNodeComparator(getStream().startsDownstream()));
-        if (index < 0)
-        {
+    private void insertNode(BasinConnectivityNode node) {
+        int index = Collections.binarySearch(streamNodes,
+                                            node,
+                                            new BasinConnectivityNodeComparator(
+                                                getStream().startsDownstream()));
+        if (index < 0) {
             index = -index - 1;
         }
         streamNodes.add(index, node);
     }
 
     /**
-     *
-     * @param streamId - input-stream id of Stream object we are retrieving if input-stream has flow into this stream
-     * @return returns Stream object for streamId if input-stream has water flowing into this stream somewhere down the line (ie. a tributary, or a tributary's tributary, etc),
-     *         otherwise, return null.
+     * Attempt to retrieve stream information for a stream connected to this one.
+     * @param streamId - input-stream id of Stream object we are retrieving if
+     *     input-stream has flow into this stream
+     * @return returns Stream object for streamId if input-stream has water flowing
+     *     into this stream somewhere down the line
+     *     (ie. a tributary, or a tributary's tributary, etc),
+     *     otherwise, return null.
      */
-    private BasinConnectivityStream getChildStream(String streamId)
-    {
+    private BasinConnectivityStream getChildStream(String streamId) {
         BasinConnectivityStream retval = null;
-        for(BasinConnectivityStream tributary : tributaries)
-        {
-            if(tributary.getStream().getStreamName().equalsIgnoreCase(streamId))
-            {
+        for(BasinConnectivityStream tributary : tributaries)  {
+            if(tributary.getStream()
+                        .getStreamName()
+                        .equalsIgnoreCase(streamId)) {
                 retval = tributary;
             }
-            if(retval == null)
-            {
+            if(retval == null) {
                 retval = tributary.getChildStream(streamId);
             }
-            if(retval != null)
-            {
+            if(retval != null) {
                 break;
             }
         }
