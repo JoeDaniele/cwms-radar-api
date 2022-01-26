@@ -23,8 +23,8 @@ import java.util.List;
     description = "Single LocationGroup or List of LocationGroups in comma separated format",
     example =
     "#LocationGroup Id, OfficeId, Description, CategoryId, CategoryOfficeId, SharedLocAliasId, SharedRefLocationId, LocGroupAttribute\r\n"
-    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity	ERD\r\n"
-    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity	ERD\r\n"
+    + "CERL,Construction Engineering Research Laboratory,Field Operating Activity,ERD\r\n"
+    + "CHL,Coastal and Hydraulics Laboratory,Field Operating Activity,ERD\r\n"
     + "NAB,Baltimore District,District,NAD\r\n"
     + "NAD,North Atlantic Division,Division Headquarters,HQ"
 )
