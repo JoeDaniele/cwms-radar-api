@@ -7,6 +7,12 @@ configurations {
     baseLibs
 }
 
+/**
+ * Make sure the Oracle jar isn't accidentally pulled in to the war
+ */
+configurations.implementation {
+    exclude group: 'com.oracle.database.jdbc'
+}
 
 dependencies {
     implementation "javax.xml.bind:jaxb-api:2.3.1"
